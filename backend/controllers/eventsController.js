@@ -1,5 +1,6 @@
 // Unified Analytics Function
-async function analyzeEventByType(appId, eventType) {
+const pool = require("../db/database");
+exports.analyzeEventByType = async (appId, eventType) => {
   switch (eventType) {
     case "file-download":
       return await analyzeFileDownloads(appId);
@@ -16,7 +17,7 @@ async function analyzeEventByType(appId, eventType) {
     default:
       throw new Error(`Unsupported event type: ${eventType}`);
   }
-}
+};
 
 async function analyzeClipboardCopyEvents(appId) {
   const sql = `
@@ -137,3 +138,43 @@ async function analyzeFileDownloads(appId) {
     throw error;
   }
 }
+async function analyzeCustomEvents(appId) {
+  const sql = `
+    SELECT 
+      eventData,
+      COUNT(*) AS EventCount
+    FROM events
+    WHERE appId = ? AND eventName = 'custom-event'
+    GROUP BY eventData
+    ORDER BY EventCount DESC
+  `;
+
+  try {
+    const results = await pool.query(sql, [appId]);
+    // Additional processing might be required to parse and aggregate eventData.
+    return results[0];
+  } catch (error) {
+    console.error("Error analyzing custom events:", error);
+    throw error;
+  }
+}
+exports.getCustomEventAnalytics = async (req, res) => {
+  const { appId } = req.query;
+
+  if (!appId) {
+    return res.status(400).json({ error: "appId and eventName are required" });
+  }
+
+  try {
+    const eventData = await analyzeCustomEvent(appId);
+    res.json({ eventData });
+  } catch (error) {
+    console.error(
+      `Error in getCustomEventAnalytics for event:custom-event `,
+      error
+    );
+    res
+      .status(500)
+      .json({ error: `Error fetching analytics for event: custom-event` });
+  }
+};

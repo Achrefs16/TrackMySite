@@ -97,14 +97,14 @@ exports.getNewUsersLastWeek = async (req, res) => {
   }
 
   try {
-    const newUsers = await fetchNewUsersLastWeek(appId);
+    const newUsers = await fetchNewUsers(appId);
     res.json({ NewUsersLastWeek: newUsers });
   } catch (error) {
     console.error("Error in getNewUsersLastWeek:", error);
     res.status(500).json({ error: "Error fetching new users data" });
   }
 };
-async function fetchNewUsersWeek(appId) {
+async function fetchNewUsers(appId) {
   const newUsersSql = `
     SELECT COUNT(*) AS NewUsers
     FROM users
@@ -147,7 +147,7 @@ async function fetchUserLoyalty(appId) {
     SELECT
       CASE
         WHEN sessionCount >= 5 THEN 'Highly Engaged'
-        WHEN sessionCount >= 2 THEN 'Moderately Engaged'
+        WHEN sessionCount >= 3 THEN 'Moderately Engaged'
         ELSE 'Low Engagement'
       END AS EngagementLevel,
       COUNT(*) AS UserCount

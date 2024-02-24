@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-
-router.get("/analytics/events/:eventType", async (req, res) => {
+const { analyzeEventByType } = require("../controllers/eventsController");
+router.get("/events/:eventType", async (req, res) => {
   const { appId } = req.query;
   const { eventType } = req.params;
 

@@ -190,7 +190,6 @@ async function handleUserSession() {
     appId: appId,
     userId: userId,
     browser: getBrowserInfo().browser,
-    browserVersion: getBrowserInfo().version,
     device: getDeviceInfo().device,
     os: getDeviceInfo().os,
     latitude: latitude || "",
@@ -389,7 +388,7 @@ export async function trackSignUp(methode) {
   };
   sendToBackend(eventRoute, data);
 }
-export async function trackSubscribe(subscriptionPlan) {
+export async function trackSubscribe(subscriptionPlan, amount) {
   await appIdPromise;
   const data = {
     appId: appId, // Ensure appId is defined or fetched from a relevant source
@@ -398,7 +397,8 @@ export async function trackSubscribe(subscriptionPlan) {
     pageUrl: window.location.pathname,
     event: "Subscribe",
     eventData: {
-      subscriptionPlan: subscriptionPlan, // Details about the subscription plan
+      subscriptionPlan: subscriptionPlan,
+      amount: amount, // Details about the subscription plan
     },
     timestamp: new Date().getTime(),
   };
@@ -442,49 +442,54 @@ export async function trackProductView(productName, productCategory) {
 }
 
 // Function to track add to cart actions
-export async function trackAddToCart(productId, productName, quantity) {
+export async function trackAddToCart(productName, productCategory, quantity) {
   await appIdPromise;
-  var data = {
-    appId: appId,
-    userId: userId,
-    sessionId: sessionId,
-    pageUrl: window.location.pathname,
-    event: "Add-to-Cart",
-    eventData: {
-      productId: productId,
-      productName: productName,
-      quantity: quantity,
-    },
+  for (let index = 0; index < quantity; index++) {
+    var data = {
+      appId: appId,
+      userId: userId,
+      sessionId: sessionId,
+      pageUrl: window.location.pathname,
+      event: "Add-to-Cart",
+      eventData: {
+        productName: productName,
+        productCategory: productCategory,
+      },
 
-    timestamp: new Date().getTime(),
-  };
-  sendToBackend(eventRoute, data);
+      timestamp: new Date().getTime(),
+    };
+    sendToBackend(eventRoute, data);
+  }
 
   // Log the add to cart data to the console or send it to a server
   // sendToBackend(AddtoCartRoute, addToCartLog);
 }
 
 // Function to track purchases
-export async function trackPurchase(orderId, totalAmount, products) {
-  await appIdPromise;
-  var data = {
-    appId: appId,
-    userId: userId,
-    sessionId: sessionId,
-    pageUrl: window.location.pathname,
-    event: "Purchase",
-    eventData: {
-      orderId: orderId,
-      totalAmount: totalAmount,
-      products: products,
-    },
+export async function trackPurchase(orderId, products) {
+  await appIdPromise; // Ensure the app ID, along with other necessary IDs, are loaded
 
-    timestamp: new Date().getTime(),
-  };
-  sendToBackend(eventRoute, data);
+  // Iterate over each product in the products array
+  products.forEach(({ name, category, price }) => {
+    // Destructure each product object
+    var data = {
+      appId: appId,
+      userId: userId,
+      sessionId: sessionId,
+      pageUrl: window.location.pathname,
+      event: "Purchase",
+      eventData: {
+        orderId: orderId,
+        productName: name, // Product name
+        productCategory: category, // Product category
+        productPrice: price, // Product price
+      },
+      timestamp: new Date().getTime(),
+    };
 
-  // Log the purchase data to the console or send it to a server
-  // sendToBackend(PurchaseRoute, purchaseLog);
+    // Send the data for each product to the backend
+    sendToBackend(eventRoute, data);
+  });
 }
 
 export async function trackContentEngagement(
@@ -528,14 +533,14 @@ export async function trackError(errorMessage, errorStack) {
 }
 
 //costm events
-export async function trackCustomEvent(eventName, eventDetails) {
+export async function track(eventDetails) {
   await appIdPromise;
   const data = {
     appId: appId,
     userId: userId,
     sessionId: sessionId,
     pageUrl: window.location.pathname,
-    eventName: eventName,
+    eventName: "custom-event",
     eventData: eventDetails,
     timestamp: new Date().toISOString(),
   };
