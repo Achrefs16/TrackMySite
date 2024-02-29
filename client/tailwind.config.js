@@ -2,13 +2,17 @@
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    colors: {
-      brand: "#665BFF",
-      alert: "#FF5340",
-      deep: "#503965",
-      sunny: "#FFC550",
+    extend: {
+      colors: {
+        brand: "#665BFF",
+        alert: "#FF5340",
+        deep: "#333333",
+        sunny: "#FFC550",
+      },
+      boxShadow: {
+        inners: "0px -25px 5px -22px inset rgba(0, 0, 0,0.5)",
+      },
     },
-    extend: {},
   },
   plugins: [],
 };

@@ -503,10 +503,10 @@ export async function trackContentEngagement(
     userId: userId, // Include user ID if available for more detailed tracking
     sessionId: sessionId, // Ensure sessionId is correctly obtained
     pageUrl: window.location.pathname,
-    event: "ContentEngagement",
+    event: "Content-Engagement",
     eventData: {
       articleId: articleId,
-      engagementType: engagementType,
+      contentType: contentType,
       details: details, // Additional details like duration, comment text, etc.
     },
     timestamp: new Date().getTime(),
