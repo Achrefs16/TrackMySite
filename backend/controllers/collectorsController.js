@@ -1,6 +1,6 @@
 const pool = require("../db/database");
 exports.appIdVerfication = async (req, res) => {
-  const { appId } = req.body;
+  const { appId } = req.headers["appid"];
   // If the appId is found in the validAppIds array
   res.json({ status: "success", message: "AppId exists.", appId });
 };

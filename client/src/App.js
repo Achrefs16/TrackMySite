@@ -1,13 +1,22 @@
 import SignIn from "./components/landing/SginIn/SignIn";
-import NavBar from "./components/landing/NavBar";
+
 import Home from "./components/landing/home/Home";
-import { Link, Routes, Route, BrowserRouter } from "react-router-dom";
-import SginUp from "./components/SginUp/SginUp";
+import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
+import axios from "axios";
+import { Toaster } from "react-hot-toast";
+import SginUp from "./components/landing/SginUp/SginUp";
 import Dashboard from "./components/Dashboard/Dashboard";
+import ProtectedRoute from "./store/ProtectedRoute";
 function App() {
+  axios.defaults.baseURL = "http://localhost:5173";
   return (
-    <>
-      <BrowserRouter>
+    <BrowserRouter>
+      <div>
+        {" "}
+        <Toaster
+          position="bottom-right"
+          toastOption={{ duration: 3000 }}
+        ></Toaster>
         <Routes>
           <Route
             path="/"
@@ -23,11 +32,24 @@ function App() {
           />
           <Route
             path="/dashboard"
-            element={<Dashboard />}
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <Navigate
+                to="/"
+                replace
+              />
+            }
           />
         </Routes>
-      </BrowserRouter>
-    </>
+      </div>
+    </BrowserRouter>
   );
 }
 

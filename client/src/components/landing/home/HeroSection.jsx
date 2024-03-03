@@ -1,6 +1,8 @@
 import React from "react";
 import img from "./img1.png";
 import { motion } from "framer-motion";
+import { useSelector } from "react-redux";
+
 function HeroSection() {
   return (
     <div className="h-dvh flex items-center pt-10  ">
@@ -9,6 +11,7 @@ function HeroSection() {
           Empower Your Online Presence <br /> with{" "}
           <span className="text-brand">Effortless Analytics</span>
         </h1>
+
         <h3 className="text-gray-500 font-medium text-2xl mt-6">
           Integrate in minutes, uncover deep insights, and elevate your
           website's performance with{" "}

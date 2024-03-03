@@ -2,18 +2,44 @@ import React, { useState } from "react";
 import img from "./search.png";
 import img1 from "./github.png";
 import NavBar from "../NavBar";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../../store/userSlice";
+import { toast } from "react-hot-toast";
+import axios from "axios";
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === "email") setEmail(value);
     else if (name === "password") setPassword(value);
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log({ email, password });
+    try {
+      const { data } = await axios.post("/auth/signin", {
+        email,
+        password,
+      });
+
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        if (data.token) {
+          // Decode token to get user details
+          dispatch(setCredentials({ token: data.token }));
+          navigate("/dashboard");
+        }
+      }
+    } catch (error) {
+      console.error(error.toJSON());
+    }
   };
   return (
     <>

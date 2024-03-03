@@ -1,8 +1,10 @@
 import React from "react";
-import img from "./img/logo.png";
+
 import img1 from "./img/logog.png";
 import { NavLink, Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 function NavBar() {
+  const user = useSelector((state) => state.user.isAuthenticated);
   return (
     <nav className="flex px-28 py-2 shadow-sm w-full">
       <div className="flex items-center gap-2">
@@ -71,16 +73,20 @@ function NavBar() {
           About Us
         </NavLink>
       </div>
-      <Link to="/sign-up">
-        <button className="text-white mr-2 bg-brand px-5 py-1.5 rounded-md text-base font-semibold  ">
-          Sign Up
-        </button>
-      </Link>
-      <Link to="/sign-in">
-        <button className="text-gray-800  bg-white border border-gray-300 px-5 py-1.5 rounded-md text-base font-semibold  ">
-          Sign In
-        </button>
-      </Link>
+      {!user && (
+        <div>
+          <Link to="/sign-up">
+            <button className="text-white mr-2 bg-brand px-5 py-1.5 rounded-md text-base font-semibold  ">
+              Sign Up
+            </button>
+          </Link>
+          <Link to="/sign-in">
+            <button className="text-gray-800  bg-white border border-gray-300 px-5 py-1.5 rounded-md text-base font-semibold  ">
+              Sign In
+            </button>
+          </Link>
+        </div>
+      )}
     </nav>
   );
 }

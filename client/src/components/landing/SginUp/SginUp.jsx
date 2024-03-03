@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import img from "./search.png";
 import img1 from "./github.png";
 import zxcvbn from "zxcvbn";
-import NavBar from "../landing/NavBar";
+import NavBar from "../NavBar";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../../store/userSlice";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 const SginUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -10,6 +15,9 @@ const SginUp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordStrength, setPasswordStrength] = useState(null);
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   // Handle input changes for all fields
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -27,10 +35,32 @@ const SginUp = () => {
   const handleCheckboxChange = () => {
     setIsTermsAccepted(!isTermsAccepted);
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (passwordsMatch && passwordIsStrong && isTermsAccepted) {
-      console.log({ name, email, password });
+      try {
+        const { data } = await axios.post("/auth/signup", {
+          name,
+          email,
+          password,
+        });
+
+        if (data.error) {
+          toast.error(data.error);
+        } else {
+          if (data.token) {
+            // Decode token to get user details
+            dispatch(setCredentials({ token: data.token }));
+
+            toast.success(
+              "congratulations your account has been successfully created"
+            );
+            navigate("/dashboard");
+          }
+        }
+      } catch (error) {
+        console.error(error.toJSON());
+      }
     }
   };
   return (
