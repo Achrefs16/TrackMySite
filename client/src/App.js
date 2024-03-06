@@ -7,6 +7,10 @@ import { Toaster } from "react-hot-toast";
 import SginUp from "./components/landing/SginUp/SginUp";
 import Dashboard from "./components/Dashboard/Dashboard";
 import ProtectedRoute from "./store/ProtectedRoute";
+import Start from "./components/Dashboard/com/Overview/Start";
+import Instructions from "./components/Dashboard/com/Instructions";
+import "react-tooltip/dist/react-tooltip.css";
+import Visitors from "./components/Dashboard/com/Audience/Visitors";
 function App() {
   axios.defaults.baseURL = "http://localhost:5173";
   return (
@@ -37,7 +41,32 @@ function App() {
                 <Dashboard />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route
+              path="overview"
+              element={<Start />}
+            />{" "}
+            <Route
+              path="documentation"
+              element={<Instructions />}
+            />
+            <Route
+              path="events"
+              element={<Instructions />}
+            />
+            <Route
+              path="settings"
+              element={<Instructions />}
+            />
+            <Route
+              path="acquisition"
+              element={<Instructions />}
+            />
+            <Route
+              path="visitors"
+              element={<Visitors />}
+            />
+          </Route>
           <Route
             path="*"
             element={

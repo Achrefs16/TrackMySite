@@ -14,8 +14,7 @@ exports.createDataFetchHandler = (entityType) => {
       }
 
       const interval = req.params.interval;
-      console.log(interval);
-      console.log(appId); // Assuming interval is passed as a URL parameter
+      // Assuming interval is passed as a URL parameter
       const results = await fetchDataByIntervalAndSubIntervals(
         interval,
         appId,
@@ -38,10 +37,7 @@ exports.createDataFetchHandler = (entityType) => {
  * @returns {Promise<Object>} - Object containing total counts and sub-interval breakdowns.
  */
 async function fetchDataByIntervalAndSubIntervals(interval, appId, entityType) {
-  // Determine the SQL for total count and sub-interval breakdown based on the specified interval
-  const now = new Date();
   let condition = ""; // SQL condition for the main interval
-  let breakdownCondition = ""; // SQL condition for sub-intervals, if applicable
   let breakdownGroupBy = ""; // SQL GROUP BY clause for sub-intervals
 
   switch (interval) {
@@ -50,27 +46,23 @@ async function fetchDataByIntervalAndSubIntervals(interval, appId, entityType) {
       // No sub-interval breakdown for a single day
       break;
     case "week":
-      condition = `YEARWEEK(FROM_UNIXTIME(timestamp / 1000), 1) = YEARWEEK(CURRENT_DATE, 1)`;
-      breakdownGroupBy = `DATE(FROM_UNIXTIME(timestamp / 1000))`;
+      condition = `FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 1 week)`;
+      breakdownGroupBy = `DATE_FORMAT(FROM_UNIXTIME(timestamp / 1000), '%d/%m')`;
       break;
     case "month":
-      condition = `YEAR(FROM_UNIXTIME(timestamp / 1000)) = YEAR(CURRENT_DATE) AND MONTH(FROM_UNIXTIME(timestamp / 1000)) = MONTH(CURRENT_DATE)`;
-      breakdownGroupBy = `DATE(FROM_UNIXTIME(timestamp / 1000))`;
+      condition = `FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)`;
+      breakdownGroupBy = `DATE_FORMAT(FROM_UNIXTIME(timestamp / 1000), '%d/%m') `;
       break;
     case "quarter":
-      condition = `YEAR(FROM_UNIXTIME(timestamp / 1000)) = YEAR(CURRENT_DATE) AND QUARTER(FROM_UNIXTIME(timestamp / 1000)) = QUARTER(CURRENT_DATE)`;
-      breakdownGroupBy = `MONTH(FROM_UNIXTIME(timestamp / 1000))`;
+      condition = `FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 3 MONTH)`;
+      breakdownGroupBy = `WEEK(FROM_UNIXTIME(timestamp / 1000))`;
       break;
     case "halfYear":
-      const halfYearCondition =
-        now.getMonth() < 6
-          ? "MONTH(FROM_UNIXTIME(timestamp / 1000)) <= 6"
-          : "MONTH(FROM_UNIXTIME(timestamp / 1000)) > 6";
-      condition = `YEAR(FROM_UNIXTIME(timestamp / 1000)) = YEAR(CURRENT_DATE) AND ${halfYearCondition}`;
-      breakdownGroupBy = `MONTH(FROM_UNIXTIME(timestamp / 1000))`;
+      condition = `FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH)`;
+      breakdownGroupBy = `WEEK(FROM_UNIXTIME(timestamp / 1000))`;
       break;
     case "year":
-      condition = `YEAR(FROM_UNIXTIME(timestamp / 1000)) = YEAR(CURRENT_DATE)`;
+      condition = `FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 12 MONTH)`;
       breakdownGroupBy = `MONTH(FROM_UNIXTIME(timestamp / 1000))`;
       break;
   }
@@ -82,7 +74,7 @@ async function fetchDataByIntervalAndSubIntervals(interval, appId, entityType) {
     // For sessions, use sessionId
   }
   // SQL for fetching the total count
-  console.log(distinctColumn);
+
   const totalSql = `
     SELECT COUNT(DISTINCT ${distinctColumn}) AS TotalCount 
     FROM ${entityType} 

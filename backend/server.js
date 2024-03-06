@@ -28,6 +28,7 @@ app.get("/", (req, res) => {
   res.send("Express server with WebSocket");
 });
 app.use("/auth", userAuthRoutes);
+app.use("", overviewAnalyticsRoutes);
 app.use("", acquiqitionRoutes);
 app.use("", behaivorRoutes);
 app.use("", commerceRoutes);

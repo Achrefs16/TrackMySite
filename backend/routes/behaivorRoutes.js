@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const behaivorController = require("../controllers/behaivorController");
 
-router.get("/pv", behaivorController.getPageViews);
+router.get("/pvvv", behaivorController.getPageViews);
 router.get("/pe", behaivorController.getPageEngagement);
 router.get("/ep", behaivorController.getEntryPage);
 router.get("/lp", behaivorController.getLastPage);

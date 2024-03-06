@@ -23,30 +23,27 @@ async function fetchUserAnalyticsByInterval(appId, interval) {
   switch (interval) {
     case "day":
       condition = `DATE(FROM_UNIXTIME(timestamp / 1000)) = CURRENT_DATE`;
+      // No sub-interval breakdown for a single day
       break;
     case "week":
-      condition = `YEARWEEK(FROM_UNIXTIME(timestamp / 1000), 1) = YEARWEEK(CURRENT_DATE, 1)`;
+      condition = `FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 1 week)`;
       breakdownGroupBy = `DATE(FROM_UNIXTIME(timestamp / 1000))`;
       break;
     case "month":
-      condition = `YEAR(FROM_UNIXTIME(timestamp / 1000)) = YEAR(CURRENT_DATE) AND MONTH(FROM_UNIXTIME(timestamp / 1000)) = MONTH(CURRENT_DATE)`;
+      condition = `FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)`;
       breakdownGroupBy = `DATE(FROM_UNIXTIME(timestamp / 1000))`;
       break;
     case "quarter":
-      condition = `YEAR(FROM_UNIXTIME(timestamp / 1000)) = YEAR(CURRENT_DATE) AND QUARTER(FROM_UNIXTIME(timestamp / 1000)) = QUARTER(CURRENT_DATE)`;
-      breakdownGroupBy = `MONTH(FROM_UNIXTIME(timestamp / 1000))`;
+      condition = `FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 3 MONTH)`;
+      breakdownGroupBy = `DATE(FROM_UNIXTIME(timestamp / 1000))`;
       break;
     case "halfYear":
-      const halfYearCondition =
-        new Date().getMonth() < 6
-          ? "MONTH(FROM_UNIXTIME(timestamp / 1000)) <= 6"
-          : "MONTH(FROM_UNIXTIME(timestamp / 1000)) > 6";
-      condition = `YEAR(FROM_UNIXTIME(timestamp / 1000)) = YEAR(CURRENT_DATE) AND ${halfYearCondition}`;
-      breakdownGroupBy = `MONTH(FROM_UNIXTIME(timestamp / 1000))`;
+      condition = `FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH)`;
+      breakdownGroupBy = `DATE(FROM_UNIXTIME(timestamp / 1000))`;
       break;
     case "year":
-      condition = `YEAR(FROM_UNIXTIME(timestamp / 1000)) = YEAR(CURRENT_DATE)`;
-      breakdownGroupBy = `MONTH(FROM_UNIXTIME(timestamp / 1000))`;
+      condition = `FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 12 MONTH)`;
+      breakdownGroupBy = `DATE(FROM_UNIXTIME(timestamp / 1000))`;
       break;
   }
 

@@ -3,6 +3,9 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      width: {
+        68: "271px", // Remove the space and the quotation marks if specifying a direct value
+      },
       colors: {
         brand: "#665BFF",
         alert: "#FF5340",

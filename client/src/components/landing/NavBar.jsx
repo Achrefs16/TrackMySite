@@ -73,7 +73,13 @@ function NavBar() {
           About Us
         </NavLink>
       </div>
-      {!user && (
+      {user ? (
+        <Link to="/dashboard/overview">
+          <button className="text-white mr-2 bg-brand px-5 py-1.5 rounded-md text-base font-semibold  ">
+            Dashboard
+          </button>
+        </Link>
+      ) : (
         <div>
           <Link to="/sign-up">
             <button className="text-white mr-2 bg-brand px-5 py-1.5 rounded-md text-base font-semibold  ">

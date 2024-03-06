@@ -17,23 +17,23 @@ const SelectModal = ({ isOpen, onClose, websites, getWebsites }) => {
     onClose();
   };
   if (!isOpen) return null;
-
+  console.log(selectedWebsite);
   return (
     <motion.div
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       transition={{ duration: 0.2 }}
-      className="fixed inset-0 bg-gray-700 bg-opacity-40  mt-14 ml-16 overflow-y-auto h-full  w-full"
+      className="absolute inset-0 bg-gray-700 bg-opacity-40 z-50 overflow-y-auto h-full w-full"
     >
       <motion.div
         initial={{ scale: 1, y: -40 }}
         whileInView={{ scale: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        className="relative top-1 left-48 p-5 border w-80 shadow-2xl rounded-md bg-white"
+        className="relative top-16 left-48 p-5 border w-80 shadow-2xl rounded-md bg-white"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center">
-          <h4 className="text-lg font-medium text-slate-800">Websites list</h4>
+          <h4 className="text-lg font-medium text-slate-800"></h4>
           <button
             className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
             onClick={onClose}
