@@ -32,7 +32,6 @@ async function sendUser(url, data) {
     }
 
     const responseData = await response.json();
-    console.log("Data sent successfully:", responseData);
   } catch (error) {
     console.error("Error sending data to the backend:", error);
   }
@@ -54,7 +53,6 @@ async function sendToBackend(url, data) {
     }
 
     const responseData = await response.json();
-    console.log("Data sent successfully:", responseData);
   } catch (error) {
     console.error("Error sending data to the backend:", error);
   }
@@ -93,30 +91,40 @@ function getSessionId() {
 
 // Function to get browser information
 function getBrowserInfo() {
-  var ua = navigator.userAgent,
-    tem,
-    M =
-      ua.match(
-        /(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i
-      ) || [];
+  var ua = navigator.userAgent;
 
-  if (/trident/i.test(M[1])) {
-    tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
-    return "IE " + (tem[1] || "");
+  // Check for Edge (including Edge Chromium)
+  if (/edge\/|edg\//i.test(ua)) {
+    return "Edge";
   }
 
-  if (M[1] === "Chrome") {
-    tem = ua.match(/\bOPR\/(\d+)/);
-    if (tem != null) return "Opera " + tem[1];
+  // Check for Google Chrome
+  if (/chrome|crios/i.test(ua)) {
+    return "Chrome";
   }
 
-  M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, "-?"];
-  if ((tem = ua.match(/version\/(\d+)/i)) != null) M.splice(1, 1, tem[1]);
+  // Check for Safari
+  if (/safari/i.test(ua) && !/chrome|crios/i.test(ua)) {
+    return "Safari";
+  }
 
-  return {
-    browser: M[0],
-    version: M[1],
-  };
+  // Check for Firefox
+  if (/firefox|fxios/i.test(ua)) {
+    return "Firefox";
+  }
+
+  // Check for Opera
+  if (/opera|opr\//i.test(ua)) {
+    return "Opera";
+  }
+
+  // Check for Internet Explorer
+  if (/msie|trident/i.test(ua)) {
+    return "IE";
+  }
+
+  // Default to "Unknown" if none of the above checks match
+  return "Unknown";
 }
 
 // Function to get device information
@@ -128,7 +136,7 @@ function getDeviceInfo() {
   } else if (/iPad|iPhone|iPod/i.test(userAgent)) {
     device = "Tablet";
   } else {
-    device = "PC";
+    device = "Laptop/Desktop";
   }
   let deviceInfo = {
     os: getOS(userAgent),
@@ -184,12 +192,12 @@ function getGeolocation() {
 async function handleUserSession() {
   // Check if data has already been sent
   const user = localStorage.getItem("usersent");
-
+  console.log(getBrowserInfo());
   const { latitude, longitude } = await getGeolocation();
   const userData = {
     appId: appId,
     userId: userId,
-    browser: getBrowserInfo().browser,
+    browser: getBrowserInfo(),
     device: getDeviceInfo().device,
     os: getDeviceInfo().os,
     latitude: latitude || "",
@@ -284,9 +292,20 @@ const updateMaxScrollPercentage = () => {
     maxScrollPercentage = currentScrollPercentage;
   }
 };
+function isExternalReferrer(referrer) {
+  if (!referrer) return false; // No referrer
 
+  const referrerHost = new URL(referrer).hostname.replace("www.", "");
+  const siteHost = window.location.hostname.replace("www.", "");
+
+  return referrerHost !== siteHost;
+}
+
+var referrer = document.referrer;
+var externalReferrer = isExternalReferrer(referrer) ? referrer : null;
 //page view
 var pageN;
+var pageUrl;
 export async function handlePageView(PageName) {
   await appIdPromise;
   maxScrollPercentage = 0;
@@ -294,7 +313,7 @@ export async function handlePageView(PageName) {
   pageStartTime = new Date().getTime();
 
   pageN = PageName;
-  // Construct an object with page view details including device and browser info
+  pageUrl = window.location.pathname;
   var data = {
     appId: appId,
     userId: userId,
@@ -304,7 +323,7 @@ export async function handlePageView(PageName) {
     eventData: {
       PageName: PageName,
       title: document.title,
-      referrer: document.referrer || null,
+      referrer: externalReferrer,
     },
     timestamp: new Date().getTime(),
   };
@@ -328,15 +347,15 @@ function sentinfo(pageN) {
       appId: appId,
       userId: userId,
       sessionId: sessionId,
-      pageUrl: null,
+      pageUrl: pageUrl,
       event: "page-leave",
       eventData: {
-        pageName: pageN,
         timespent: timeSpentInSeconds,
         scrollPercentage: maxScrollPercentage,
       },
       timestamp: new Date().getTime(),
     };
+
     sendToBackend(eventRoute, data);
   }
 }
@@ -442,61 +461,55 @@ export async function trackProductView(productName, productCategory) {
 }
 
 // Function to track add to cart actions
-export async function trackAddToCart(productName, productCategory, quantity) {
+export async function trackAddToCart(productName, productCategory) {
   await appIdPromise;
-  for (let index = 0; index < quantity; index++) {
-    var data = {
-      appId: appId,
-      userId: userId,
-      sessionId: sessionId,
-      pageUrl: window.location.pathname,
-      event: "Add-to-Cart",
-      eventData: {
-        productName: productName,
-        productCategory: productCategory,
-      },
+  console.log(productName);
+  var data = {
+    appId: appId,
+    userId: userId,
+    sessionId: sessionId,
+    pageUrl: window.location.pathname,
+    event: "Add-to-Cart",
+    eventData: {
+      productName: productName,
+      productCategory: productCategory,
+    },
 
-      timestamp: new Date().getTime(),
-    };
-    sendToBackend(eventRoute, data);
-  }
+    timestamp: new Date().getTime(),
+  };
+  sendToBackend(eventRoute, data);
 
   // Log the add to cart data to the console or send it to a server
   // sendToBackend(AddtoCartRoute, addToCartLog);
 }
 
 // Function to track purchases
-export async function trackPurchase(orderId, products) {
+export async function trackPurchase(orderId, name, category, price) {
   await appIdPromise; // Ensure the app ID, along with other necessary IDs, are loaded
 
   // Iterate over each product in the products array
-  products.forEach(({ name, category, price }) => {
-    // Destructure each product object
-    var data = {
-      appId: appId,
-      userId: userId,
-      sessionId: sessionId,
-      pageUrl: window.location.pathname,
-      event: "Purchase",
-      eventData: {
-        orderId: orderId,
-        productName: name, // Product name
-        productCategory: category, // Product category
-        productPrice: price, // Product price
-      },
-      timestamp: new Date().getTime(),
-    };
 
-    // Send the data for each product to the backend
-    sendToBackend(eventRoute, data);
-  });
+  // Destructure each product object
+  var data = {
+    appId: appId,
+    userId: userId,
+    sessionId: sessionId,
+    pageUrl: window.location.pathname,
+    event: "Purchase",
+    eventData: {
+      orderId: orderId,
+      productName: name, // Product name
+      productCategory: category, // Product category
+      productPrice: price, // Product price
+    },
+    timestamp: new Date().getTime(),
+  };
+
+  // Send the data for each product to the backend
+  sendToBackend(eventRoute, data);
 }
 
-export async function trackContentEngagement(
-  articleId,
-  engagementType,
-  details
-) {
+export async function trackContentEngagement(articleId, contentType, details) {
   await appIdPromise; // Ensure any necessary setup, like appId, is completed
   const data = {
     appId: appId,
@@ -533,15 +546,15 @@ export async function trackError(errorMessage, errorStack) {
 }
 
 //costm events
-export async function track(eventDetails) {
+export async function track(eventName, eventDetails) {
   await appIdPromise;
   const data = {
     appId: appId,
     userId: userId,
     sessionId: sessionId,
     pageUrl: window.location.pathname,
-    eventName: "custom-event",
-    eventData: eventDetails,
+    event: eventName,
+    eventData: { "custom-event": eventDetails },
     timestamp: new Date().toISOString(),
   };
   sendToBackend(eventRoute, data);
@@ -562,6 +575,7 @@ function handleVisibility(targetElement) {
 
     timestamp: new Date().getTime(),
   };
+
   sendToBackend(eventRoute, data);
 
   // Log the visibility data to the console or send it to a server
@@ -576,7 +590,6 @@ function trackVisibility() {
     // Create an Intersection Observer
 
     var visibilityObserver = new IntersectionObserver((entries) => {
-      console.log(element);
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           // Element is now visible in the viewport
@@ -726,6 +739,7 @@ function trackClick() {
 
         timestamp: new Date().getTime(),
       };
+      console.log(data);
       sendToBackend(eventRoute, data);
       //  sendToBackend(clickEventRoute, clickedElementInfo);
     });
@@ -829,6 +843,7 @@ function handelClipboardCopy(event) {
 
     timestamp: new Date().getTime(),
   };
+  console.log(copiedData);
   sendToBackend(eventRoute, data);
   // sendToBackend(clipboardCopyRoute, clipboardEventData);
 }

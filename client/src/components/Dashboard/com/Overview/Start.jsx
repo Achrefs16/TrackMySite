@@ -4,29 +4,24 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../../../store/userSlice";
-
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from "recharts";
 import Card from "../Card";
 import axios from "axios";
 import Periode from "./Periode";
+import AreaChart from "../charts/AreaChart";
 
 const Start = () => {
   const userDetails = useSelector((state) => state.user.details);
-  const selectedWebsite = useSelector((state) => state.website.selectedWebsite);
+  const selectedWebsite = useSelector(
+    (state) => state.website.selectedWebsite.appId
+  );
   const [isOpen, setIsOpen] = useState(false);
+  const [conversion, setConversion] = useState("");
   const [data, setData] = useState({
     users: null,
     sessions: null,
     events: null,
   });
+  const [render, setRender] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState("year");
 
   const handleChange = async (event) => {
@@ -40,6 +35,7 @@ const Start = () => {
   useEffect(() => {
     if (token) {
       ["users", "sessions", "events"].forEach((entity) => getData(entity));
+      getConversion();
     }
   }, [selectedPeriod, token]);
 
@@ -47,7 +43,7 @@ const Start = () => {
     if (token) {
       try {
         const response = await axios.get(
-          `/${entity}/${selectedPeriod}?appId=testtest123`,
+          `/${entity}/${selectedPeriod}?appId=${selectedWebsite}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -55,11 +51,39 @@ const Start = () => {
           }
         );
         // Update the state with the data for the specific entity
-        console.log(response.data);
+
         setData((prevData) => ({
           ...prevData,
           [entity]: response.data,
         }));
+        setRender(true);
+      } catch (error) {
+        if (
+          error.response &&
+          (error.response.status === 401 || error.response.status === 403)
+        ) {
+          console.error("Unauthorized or Forbidden response, logging out.");
+          dispatch(logout()); // Log the user out by dispatching the logout action
+        }
+      }
+    } else {
+      console.error("No token found, please login.");
+    }
+  };
+  const getConversion = async () => {
+    if (token) {
+      try {
+        const response = await axios.get(
+          `/conversion?appId=${selectedWebsite}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response.data);
+        setConversion(response.data.Conversion.TotalRevenue);
+        setRender(true);
       } catch (error) {
         if (
           error.response &&
@@ -89,40 +113,25 @@ const Start = () => {
       name: `${item.SubInterval}`,
       Count: item.Count,
     })) || [];
-  const mergeDatasets = (dataSession, dataUser) => {
-    console.log(dataSession);
-    // Create a map to hold the merged data with SubInterval as the key
-    const mergedMap = new Map();
-    // Add or update event data
-    dataUser.forEach(({ name, Count }) => {
-      const existing = mergedMap.get(name) || {
-        name,
-        UserCount: 0,
-        SessionCount: 0,
-      };
-      existing.UserCount = Count;
-      mergedMap.set(name, existing);
-    });
-    // Add or update session data
-    dataSession.forEach(({ name, Count }) => {
-      const existing = mergedMap.get(name) || {
-        name,
-        UserCount: 0,
-        SessionCount: 0,
-      };
-      existing.SessionCount = Count;
-      mergedMap.set(name, existing);
-    });
 
-    // Convert the map to a sorted array
-    return Array.from(mergedMap.values()).sort((a, b) =>
-      a.name.localeCompare(b.name)
-    );
-  };
-
-  const mergedData = mergeDatasets(formattedDataSession, formattedDataUser);
-
-  console.log(mergedData);
+  const categories = formattedDataEvent.map((item) => item.name);
+  const seriesData = [
+    {
+      name: "User Count",
+      data: formattedDataEvent.map((item) => item.Count),
+    },
+  ];
+  const categoriesU = formattedDataUser.map((item) => item.name);
+  const seriesDataU = [
+    {
+      name: "User Count",
+      data: formattedDataUser.map((item) => item.Count),
+    },
+    {
+      name: "User Count",
+      data: formattedDataSession.map((item) => item.Count),
+    },
+  ];
   return (
     <>
       <div className="bg-gray-100   h-5/6">
@@ -133,80 +142,27 @@ const Start = () => {
             handleChange={handleChange}
           />
         </div>
-        {data.users ? (
+        {render ? (
           <div className=" flex gap-5 w-full justify-center mx-auto ">
             <div className="  bg-white pt-2  rounded-md border border-gray-300 w-fit pr-3 ">
               <h1 className="text-gray-700 font-semibold ml-4 ">
                 Users And Sessions
               </h1>
-              <LineChart
+              <AreaChart
+                series={seriesDataU}
+                categories={categoriesU}
                 width={564}
-                height={210}
-                data={mergedData}
-                className="-ml-4 my-4"
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="name"
-                  tick={{ fontSize: "11px" }}
-                  axisLine={false}
-                />
-                <YAxis
-                  tick={{ fontSize: "11px" }}
-                  axisLine={false}
-                />
-                <Tooltip />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="SessionCount"
-                  stroke="#201e45"
-                  strokeWidth={2}
-                  activeDot={{ r: 3, stroke: "#201e45" }}
-                  dot={false}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="UserCount"
-                  stroke="#665BFF"
-                  strokeWidth={2}
-                  activeDot={{ r: 3, stroke: "#665BFF" }}
-                  dot={false}
-                />
-
-                {/* Remove the second Line component if you don't have a uv dataKey or add another line for different data if needed */}
-              </LineChart>
+                height={200}
+              />
             </div>
             <div className="  bg-white pt-2  rounded-md border border-gray-300 w-fit pr-3 ">
               <h1 className="text-gray-700 font-semibold ml-4">Events</h1>
-              <LineChart
+              <AreaChart
+                series={seriesData}
+                categories={categories}
                 width={564}
-                height={210}
-                className="-ml-4 my-4"
-                data={formattedDataEvent}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="name"
-                  tick={{ fontSize: "11px" }}
-                  axisLine={false}
-                />
-                <YAxis
-                  tick={{ fontSize: "11px" }}
-                  axisLine={false}
-                />
-                <Tooltip />
-
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="Count" // Adjusted to match the key in formattedData
-                  stroke="#665BFF"
-                  strokeWidth={2}
-                  activeDot={{ r: 3, stroke: "#665BFF" }}
-                  dot={false}
-                />
-              </LineChart>
+                height={200}
+              />
             </div>
           </div>
         ) : (
@@ -226,10 +182,12 @@ const Start = () => {
               content={"Total events"}
               count={data.events.TotalCount}
             />
-            <Card
-              content={"Coversion $"}
-              count={data.events.TotalCount}
-            />
+            {conversion && (
+              <Card
+                content={"Coversion $"}
+                count={conversion}
+              />
+            )}
           </div>
         )}
       </div>

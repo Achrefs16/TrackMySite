@@ -23,7 +23,7 @@ async function AvgSessionDuration(appId) {
   const sessionDurationSql = `
     SELECT AVG(sessionDuration) AS AvgSessionDuration
     FROM (
-      SELECT MAX(timestamp) - MIN(timestamp) AS sessionDuration
+      SELECT  (MAX(timestamp) - MIN(timestamp)) / 60 AS sessionDuration
       FROM events
       WHERE appId = ?
       GROUP BY sessionId
@@ -43,16 +43,26 @@ async function AvgSessionDuration(appId) {
 
 async function UserJourneys(appId) {
   const sql = `
-    SELECT Journey, COUNT(*) AS Occurrences 
-    FROM ( 
-      SELECT sessionId, GROUP_CONCAT(JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.PageName')) ORDER BY timestamp SEPARATOR ' -> ') AS Journey 
-      FROM events 
-      WHERE appId = ? 
-      GROUP BY sessionId 
-    ) AS SessionJourneys 
-    GROUP BY Journey 
-    ORDER BY Occurrences DESC 
-    LIMIT 10;
+SELECT
+  Journey,
+  COUNT(*) AS Occurrences
+FROM (
+  SELECT
+    sessionId,
+    GROUP_CONCAT(pageUrl ORDER BY timestamp ASC SEPARATOR ', ') AS Journey
+  FROM
+    events
+  WHERE
+    appId = ? AND
+    event='page-view'
+  GROUP BY
+    sessionId
+) AS SessionJourneys
+GROUP BY
+  Journey
+ORDER BY
+  Occurrences DESC
+LIMIT 10;
   `;
 
   try {
@@ -73,7 +83,7 @@ async function LastPage(appId) {
   const lastPageSessionCountsSql = `
     SELECT LastPage, COUNT(*) AS SessionCount
     FROM (
-      SELECT sessionId, JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.PageName')) AS LastPage,
+      SELECT sessionId,  pageUrl AS LastPage,
              RANK() OVER (PARTITION BY sessionId ORDER BY timestamp DESC) AS rn
       FROM events
       WHERE appId = ? AND event = 'page-view'
@@ -95,7 +105,7 @@ async function EntryPage(appId) {
   const entryPageSessionCountsSql = `
     SELECT EntryPage, COUNT(*) AS SessionCount
     FROM (
-      SELECT sessionId, JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.PageName')) AS EntryPage,
+      SELECT sessionId, pageUrl AS EntryPage,
              RANK() OVER (PARTITION BY sessionId ORDER BY timestamp ASC) AS rn
       FROM events
       WHERE appId = ? AND event = 'page-view'
@@ -119,10 +129,9 @@ async function BounceRate(appId) {
     SELECT EntryPage, 
            COUNT(*) AS TotalSessions,
            SUM(CASE WHEN PageViews = 1 THEN 1 ELSE 0 END) AS SinglePageSessions,
-           (SUM(CASE WHEN PageViews = 1 THEN 1 ELSE 0 END) / COUNT(*)) * 100 AS BounceRate
-    FROM (
+ ROUND((SUM(CASE WHEN PageViews = 1 THEN 1 ELSE 0 END) / COUNT(*)) * 100, 0) AS BounceRate    FROM (
       SELECT sessionId, 
-             JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.PageName')) AS EntryPage,
+             pageUrl AS EntryPage,
              COUNT(sessionId) AS PageViews
       FROM events
       WHERE appId = ? AND event = 'page-view'
@@ -148,12 +157,12 @@ async function BounceRate(appId) {
 async function PageEngagement(appId) {
   const engagementMetricsSql = `
     SELECT 
-      JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.PageName')) AS PageName,
+      pageUrl AS PageName,
       AVG(JSON_EXTRACT(eventData, '$.timespent')) AS AvgTimeSpent,
       AVG(JSON_EXTRACT(eventData, '$.scrollPercentage')) AS AvgScrollDepth,
       COUNT(*) AS PageViews
     FROM events
-    WHERE appId = ? AND event = 'page-leave' AND JSON_EXTRACT(eventData, '$.PageName') IS NOT NULL
+    WHERE appId = ? AND event = 'page-leave' AND pageUrl IS NOT NULL
     GROUP BY PageName
     ORDER BY AvgTimeSpent DESC, AvgScrollDepth DESC;
   `;

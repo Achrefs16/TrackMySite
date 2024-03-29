@@ -16,7 +16,7 @@ exports.insertEventData = async (data) => {
       JSON.stringify(data.eventData), // Storing the whole event object as JSON in eventData
       data.timestamp,
     ]);
-    console.log(`Event inserted with ID: ${result.insertId}`);
+    console.log(`Event inserted with ID: ${data.event} `);
   } catch (error) {
     console.error("Error inserting event data:", error);
   }
@@ -39,12 +39,11 @@ exports.insertUserData = async (data) => {
         longitude
       );
 
-      const query = `INSERT INTO users (userId, appId, browser, browserVersion, device, os, country, city, language, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      const query = `INSERT INTO users (userId, appId, browser, device, os, country, city, language, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
       const params = [
         data.userId,
         data.appId,
         data.browser,
-        data.browserVersion,
         data.device,
         data.os,
         country || "Unknown",
@@ -98,7 +97,7 @@ exports.insertSessionData = async (data) => {
       return { status: "exists", message: "Session already exists" };
     } else {
       // If the session does not exist, insert the new session
-      const insertQuery = `INSERT INTO sessions (appId, userId, sessionId, startTime) VALUES (?, ?, ?, ?)`;
+      const insertQuery = `INSERT INTO sessions (appId, userId, sessionId, timestamp) VALUES (?, ?, ?, ?)`;
       const params = [
         data.appId,
         data.userId,

@@ -14,6 +14,10 @@ exports.analyzeEventByType = async (appId, eventType) => {
       return await analyzeSearchQueryEvents(appId);
     case "clipboard-copy":
       return await analyzeClipboardCopyEvents(appId);
+    case "visibility":
+      return await analyzeVisibilityEvents(appId);
+    case "custom-event":
+      return await analyzeCustomEvents(appId);
     default:
       throw new Error(`Unsupported event type: ${eventType}`);
   }
@@ -22,12 +26,15 @@ exports.analyzeEventByType = async (appId, eventType) => {
 async function analyzeClipboardCopyEvents(appId) {
   const sql = `
     SELECT 
-      JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.elementId')) AS ElementId,
-      COUNT(*) AS CopyCount
+       event,
+    pageUrl,
+      eventData,
+   
+      COUNT(*) AS Count
     FROM events
-    WHERE appId = ? AND event = 'clipboard-copy' AND JSON_EXTRACT(eventData, '$.elementId') IS NOT NULL
-    GROUP BY ElementId
-    ORDER BY CopyCount DESC;
+    WHERE appId = ? AND event = 'clipboard-copy' 
+    GROUP BY eventData
+    ORDER BY Count DESC;
   `;
 
   try {
@@ -42,12 +49,14 @@ async function analyzeClipboardCopyEvents(appId) {
 async function analyzeSearchQueryEvents(appId) {
   const sql = `
     SELECT 
-      JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.query')) AS SearchQuery,
-      COUNT(*) AS QueryCount
+     event,
+      pageUrl,
+     eventData,
+      COUNT(*) AS Count
     FROM events
-    WHERE appId = ? AND event = 'query-search' AND JSON_EXTRACT(eventData, '$.query') IS NOT NULL
-    GROUP BY SearchQuery
-    ORDER BY QueryCount DESC;
+    WHERE appId = ? AND event = 'query-search'
+    GROUP BY eventData
+    ORDER BY Count DESC;
   `;
 
   try {
@@ -61,12 +70,14 @@ async function analyzeSearchQueryEvents(appId) {
 async function analyzeClickEvents(appId) {
   const sql = `
     SELECT 
-      JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.elementId')) AS ElementId,
-      COUNT(*) AS ClickCount
+     event,
+      pageUrl,
+      eventData,
+      COUNT(*) AS Count
     FROM events
-    WHERE appId = ? AND event = 'click' AND JSON_EXTRACT(eventData, '$.elementId') IS NOT NULL
-    GROUP BY ElementId
-    ORDER BY ClickCount DESC;
+    WHERE appId = ? AND event = 'click'
+    GROUP BY eventData
+    ORDER BY Count DESC;
   `;
 
   try {
@@ -80,12 +91,14 @@ async function analyzeClickEvents(appId) {
 async function analyzeFormSubmissions(appId) {
   const sql = `
     SELECT 
-      JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.formId')) AS FormId,
-      COUNT(*) AS SubmissionCount
+     event,
+      pageUrl,
+      eventData,
+      COUNT(*) AS Count
     FROM events
     WHERE appId = ? AND event = 'form-submit'
-    GROUP BY FormId
-    ORDER BY SubmissionCount DESC;
+    GROUP BY eventData
+    ORDER BY Count DESC;
   `;
 
   try {
@@ -99,13 +112,15 @@ async function analyzeFormSubmissions(appId) {
 async function analyzeVideoInteractions(appId) {
   const sql = `
     SELECT 
-      JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.videoId')) AS VideoId,
-      COUNT(*) AS PlayCount,
+     event,
+      pageUrl,
+      eventData,
+      COUNT(*) AS Count,
       AVG(JSON_EXTRACT(eventData, '$.videoDuration')) AS AvgDuration
     FROM events
     WHERE appId = ? AND event = 'video-play'
-    GROUP BY VideoId
-    ORDER BY PlayCount DESC;
+    GROUP BY eventData
+    ORDER BY Count DESC;
   `;
 
   try {
@@ -122,12 +137,14 @@ async function analyzeVideoInteractions(appId) {
 async function analyzeFileDownloads(appId) {
   const sql = `
     SELECT 
-      JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.fileName')) AS FileName,
-      COUNT(*) AS DownloadCount
+     event,
+      pageUrl,
+      eventData,
+      COUNT(*) AS Count
     FROM events
     WHERE appId = ? AND event = 'file-download'
-    GROUP BY FileName
-    ORDER BY DownloadCount DESC;
+    GROUP BY eventData
+    ORDER BY Count DESC;
   `;
 
   try {
@@ -140,13 +157,16 @@ async function analyzeFileDownloads(appId) {
 }
 async function analyzeCustomEvents(appId) {
   const sql = `
-    SELECT 
-      eventData,
-      COUNT(*) AS EventCount
-    FROM events
-    WHERE appId = ? AND eventName = 'custom-event'
-    GROUP BY eventData
-    ORDER BY EventCount DESC
+ SELECT
+  event,
+  pageUrl,
+  eventData,
+  COUNT(*) AS Count
+FROM events
+WHERE appId = ? AND
+     JSON_EXTRACT(eventData, '$.custom-event') IS NOT NULL
+
+ORDER BY Count DESC;
   `;
 
   try {
@@ -158,23 +178,25 @@ async function analyzeCustomEvents(appId) {
     throw error;
   }
 }
-exports.getCustomEventAnalytics = async (req, res) => {
-  const { appId } = req.query;
 
-  if (!appId) {
-    return res.status(400).json({ error: "appId and eventName are required" });
-  }
+async function analyzeVisibilityEvents(appId) {
+  const sql = `
+    SELECT 
+     event,
+    pageUrl,
+      eventData,
+      COUNT(*) AS Count
+    FROM events
+    WHERE appId = ? AND event = 'visibility' 
+    GROUP BY eventData
+    ORDER BY Count DESC;
+  `;
 
   try {
-    const eventData = await analyzeCustomEvent(appId);
-    res.json({ eventData });
+    const results = await pool.query(sql, [appId]);
+    return results[0];
   } catch (error) {
-    console.error(
-      `Error in getCustomEventAnalytics for event:custom-event `,
-      error
-    );
-    res
-      .status(500)
-      .json({ error: `Error fetching analytics for event: custom-event` });
+    console.error("Error analyzing clipboard copy events:", error);
+    throw error;
   }
-};
+}

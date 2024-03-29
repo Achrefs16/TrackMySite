@@ -20,7 +20,7 @@ const ModalProfile = ({ isOpen, onClose }) => {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
-      className="w-64 h-32 bg-gray-50 rounded-3xl shadow-xl px-2 py-1.5 absolute right-8 top-14  z-50 "
+      className="w-64 h-32 bg-gray-50 rounded-xl border border-gray-300 shadow-xl px-2 py-1.5 absolute right-8 top-14  z-50 "
     >
       <h1 className="text-slate-800 font-medium text-center mt-4">
         {userDetails.name}

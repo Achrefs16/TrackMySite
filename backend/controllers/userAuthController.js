@@ -112,8 +112,67 @@ const loginUser = async (req, res) => {
     });
   }
 };
+const getProfile = async (req, res) => {
+  console.log(req.user);
+  try {
+    const userId = req.user.id;
+
+    const [users] = await pool.query(
+      "SELECT name, email FROM owners WHERE id = ?",
+      [userId]
+    );
+
+    if (users.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(users[0]);
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+const updateProfile = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    const userId = req.user.id; // Again, assuming this is set by your authentication middleware
+
+    // Basic validation
+    if (!name || !email) {
+      return res.status(400).json({ error: "Name and email are required" });
+    }
+
+    // Optional: Validate and hash the new password if it's being updated
+    let hashedPassword;
+    if (password) {
+      if (password.length < 6) {
+        return res
+          .status(400)
+          .json({ error: "Password must be at least 6 characters long" });
+      }
+      hashedPassword = await hashPassword(password);
+    }
+
+    // Update user profile in the database
+    await pool.query(
+      "UPDATE owners SET name = ?, email = ?" +
+        (hashedPassword ? ", password = ?" : "") +
+        " WHERE id = ?",
+      hashedPassword
+        ? [name, email, hashedPassword, userId]
+        : [name, email, userId]
+    );
+
+    res.json({ success: "Profile updated successfully" });
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 module.exports = {
   loginUser,
   registerUser,
+  getProfile,
+  updateProfile,
 };

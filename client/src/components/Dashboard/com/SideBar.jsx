@@ -7,6 +7,8 @@ import { TbSocial } from "react-icons/tb";
 import { PiCursorClickFill } from "react-icons/pi";
 import { IoIosDocument } from "react-icons/io";
 import { FaUserCog } from "react-icons/fa";
+import { IoBagCheckSharp } from "react-icons/io5";
+
 import { Tooltip } from "react-tooltip";
 
 const SideBar = () => {
@@ -42,7 +44,7 @@ const SideBar = () => {
       <NavLink
         data-tooltip-id="Visitors"
         data-tooltip-content="Visitors"
-        to="/dashboard/visitors"
+        to="/dashboard/visitors/engagement"
         className={({ isActive }) =>
           isActive
             ? "bg-brand text-white mx-auto rounded transition duration-300 w-8 h-8 mb-4 flex justify-center items-center"
@@ -53,22 +55,22 @@ const SideBar = () => {
         <FaUsers className="mb-2 px-1.5 pt-1.5 w-full h-full" />
       </NavLink>
       <NavLink
-        data-tooltip-id="Acquisition"
-        data-tooltip-content="Acquisition"
-        to="/dashboard/acquisition"
+        data-tooltip-id="Conversion"
+        data-tooltip-content="Conversion"
+        to="/dashboard/conversion/purchase"
         className={({ isActive }) =>
           isActive
             ? "bg-brand text-white mx-auto rounded transition duration-300 w-8 h-8 mb-4 flex justify-center items-center"
             : "text-gray-500 hover:bg-gray-300 hover:text-gray-600 transition duration-300 w-8 h-8 mb-4 mx-auto rounded flex justify-center items-center"
         }
       >
-        <Tooltip id="Acquisition" />
-        <TbSocial className="mb-2 px-1.5 pt-1.5 w-full h-full" />
+        <Tooltip id="Coversion" />
+        <IoBagCheckSharp className="mb-2 px-1.5 pt-1.5 w-full h-full" />
       </NavLink>
       <NavLink
         data-tooltip-id="Events"
         data-tooltip-content="Behavior"
-        to="/dashboard/events"
+        to="/dashboard/behaivor/pages"
         className={({ isActive }) =>
           isActive
             ? "bg-brand text-white mx-auto rounded transition duration-300 w-8 h-8 mb-4 flex justify-center items-center"
@@ -82,7 +84,7 @@ const SideBar = () => {
       <NavLink
         data-tooltip-id="Documentation"
         data-tooltip-content="Documentation"
-        to="/dashboard/documentation"
+        to="/dashboard/documentation/installation"
         className={({ isActive }) =>
           isActive
             ? "bg-brand text-white mx-auto rounded transition duration-300 w-8 h-8 mb-4 flex justify-center items-center"

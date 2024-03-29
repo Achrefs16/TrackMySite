@@ -7,52 +7,21 @@ async function combineProductViews(appId) {
     FROM events
     WHERE appId = ? AND event = 'Product-View'
     GROUP BY productName
-    ORDER BY TotalViews DESC;
+    ORDER BY TotalViews DESC
+      LIMIT 10;
   `;
 
   // SQL for Daily Product Views in the Last Month
-  const dailyViewsSql = `
-    SELECT  JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.productName')) AS productName,
-           DATE(FROM_UNIXTIME(timestamp / 1000)) AS ViewDate, 
-           COUNT(*) AS DailyViews
-    FROM events
-    WHERE appId = ? AND event = 'Product-View'
-          AND timestamp >= UNIX_TIMESTAMP(CURDATE() - INTERVAL 1 MONTH) * 1000
-    GROUP BY productName, ViewDate
-    ORDER BY productName, ViewDate DESC;
-  `;
 
   try {
     // Fetch Total Views
-    const [totalViewsResult] = await pool.query(totalViewsSql, [appId]);
+    const totalViewsResult = await pool.query(totalViewsSql, [appId]);
 
     // Fetch Daily Views
-    const [dailyViewsResult] = await pool.query(dailyViewsSql, [appId]);
 
     // Format the combined result
-    const combinedResult = totalViewsResult.reduce(
-      (acc, { productName, TotalViews }) => {
-        // Initialize product in accumulator with total views and an empty array for daily views
-        acc[productName] = {
-          TotalViews: parseInt(TotalViews, 10),
-          DailyViews: [],
-        };
-        return acc;
-      },
-      {}
-    );
 
-    // Fill in daily views for each product
-    dailyViewsResult.forEach(({ productName, ViewDate, DailyViews }) => {
-      if (combinedResult[productName]) {
-        combinedResult[productName].DailyViews.push({
-          ViewDate,
-          DailyViews: parseInt(DailyViews, 10),
-        });
-      }
-    });
-
-    return combinedResult;
+    return totalViewsResult[0];
   } catch (error) {
     console.error("Error combining product views:", error);
     throw error; // Rethrow or handle as needed
@@ -66,53 +35,15 @@ async function combineAddToCartViews(appId) {
     FROM events
     WHERE appId = ? AND event = 'Add-to-Cart'
     GROUP BY productName
-    ORDER BY TotalAdds DESC;
-  `;
-
-  // SQL for Daily "Add-to-Cart" Actions in the Last Month
-  const dailyAddsSql = `
-    SELECT  JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.productName')) AS productName,
-           DATE(FROM_UNIXTIME(timestamp / 1000)) AS AddDate, 
-           COUNT(*) AS DailyAdds
-    FROM events
-    WHERE appId = ? AND event = 'Add-to-Cart'
-          AND timestamp >= UNIX_TIMESTAMP(CURDATE() - INTERVAL 1 MONTH) * 1000
-    GROUP BY productName, AddDate
-    ORDER BY productName, AddDate DESC;
+    ORDER BY TotalAdds DESC
+      LIMIT 10;
   `;
 
   try {
     // Fetch Total Adds
-    const [totalAddsResult] = await pool.query(totalAddsSql, [appId]);
+    const totalAddsResult = await pool.query(totalAddsSql, [appId]);
 
-    // Fetch Daily Adds
-    const [dailyAddsResult] = await pool.query(dailyAddsSql, [appId]);
-
-    // Format the combined result
-    const combinedResult = totalAddsResult.reduce(
-      (acc, { productName, TotalAdds }) => {
-        // Initialize product in accumulator with total adds and an empty array for daily adds
-        acc[productName] = {
-          TotalAdds: parseInt(TotalAdds, 10),
-          DailyAdds: [],
-        };
-        return acc;
-      },
-      {}
-    );
-
-    // Fill in daily adds for each product
-    dailyAddsResult.forEach(({ productName, AddDate, DailyAdds }) => {
-      if (combinedResult[productName]) {
-        // Ensure the product exists in the combinedResult object
-        combinedResult[productName].DailyAdds.push({
-          AddDate,
-          DailyAdds: parseInt(DailyAdds, 10),
-        });
-      }
-    });
-
-    return combinedResult;
+    return totalAddsResult[0];
   } catch (error) {
     console.error("Error combining add-to-cart data:", error);
     throw error; // Rethrow or handle as needed
@@ -126,59 +57,17 @@ async function combineAddToCartCategoryViews(appId) {
     FROM events
     WHERE appId = ? AND event = 'Add-to-Cart'
     GROUP BY productCategory
-    ORDER BY TotalAdds DESC;
-  `;
-
-  // SQL for Daily "Add-to-Cart" Actions in the Last Month by Category
-  const dailyCategoryAddsSql = `
-    SELECT  JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.productCategory')) AS productCategory,
-           DATE(FROM_UNIXTIME(timestamp / 1000)) AS AddDate, 
-           COUNT(*) AS DailyAdds
-    FROM events
-    WHERE appId = ? AND event = 'Add-to-Cart'
-          AND timestamp >= UNIX_TIMESTAMP(CURDATE() - INTERVAL 1 MONTH) * 1000
-    GROUP BY productCategory, AddDate
-    ORDER BY productCategory, AddDate DESC;
+    ORDER BY TotalAdds DESC
+      LIMIT 10;
   `;
 
   try {
     // Fetch Total Adds by Category
-    const [totalCategoryAddsResult] = await pool.query(totalCategoryAddsSql, [
+    const totalCategoryAddsResult = await pool.query(totalCategoryAddsSql, [
       appId,
     ]);
 
-    // Fetch Daily Adds by Category for the Last Month
-    const [dailyCategoryAddsResult] = await pool.query(dailyCategoryAddsSql, [
-      appId,
-    ]);
-
-    // Format the combined result for categories
-    const combinedCategoryResult = totalCategoryAddsResult.reduce(
-      (acc, { productCategory, TotalAdds }) => {
-        // Initialize category in accumulator with total adds and an empty array for daily adds
-        acc[productCategory] = {
-          TotalAdds: parseInt(TotalAdds, 10),
-          DailyAdds: [],
-        };
-        return acc;
-      },
-      {}
-    );
-
-    // Fill in daily adds for each category
-    dailyCategoryAddsResult.forEach(
-      ({ productCategory, AddDate, DailyAdds }) => {
-        if (combinedCategoryResult[productCategory]) {
-          // Ensure the category exists in the combinedCategoryResult object
-          combinedCategoryResult[productCategory].DailyAdds.push({
-            AddDate,
-            DailyAdds: parseInt(DailyAdds, 10),
-          });
-        }
-      }
-    );
-
-    return combinedCategoryResult;
+    return totalCategoryAddsResult[0];
   } catch (error) {
     console.error("Error combining add-to-cart category data:", error);
     throw error; // Rethrow or handle as needed
@@ -192,60 +81,18 @@ async function combineProductViewsByCategory(appId) {
     FROM events
     WHERE appId = ? AND event = 'Product-View'
     GROUP BY productCategory
-    ORDER BY TotalViews DESC;
-  `;
-
-  // SQL for Daily Product Views in the Last Month by Category
-  const dailyViewsByCategorySql = `
-    SELECT  JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.productCategory')) AS productCategory,
-           DATE(FROM_UNIXTIME(timestamp / 1000)) AS ViewDate, 
-           COUNT(*) AS DailyViews
-    FROM events
-    WHERE appId = ? AND event = 'Product-View'
-          AND timestamp >= UNIX_TIMESTAMP(CURDATE() - INTERVAL 1 MONTH) * 1000
-    GROUP BY productCategory, ViewDate
-    ORDER BY productCategory, ViewDate DESC;
+    ORDER BY TotalViews DESC
+       LIMIT 10;
   `;
 
   try {
     // Fetch Total Views by Category
-    const [totalViewsByCategoryResult] = await pool.query(
+    const totalViewsByCategoryResult = await pool.query(
       totalViewsByCategorySql,
       [appId]
     );
 
-    // Fetch Daily Views by Category for the Last Month
-    const [dailyViewsByCategoryResult] = await pool.query(
-      dailyViewsByCategorySql,
-      [appId]
-    );
-
-    // Combine results
-    const combinedResult = totalViewsByCategoryResult.reduce(
-      (acc, { productCategory, TotalViews }) => {
-        // Initialize category in accumulator with total views and an empty array for daily views
-        acc[productCategory] = {
-          TotalViews: parseInt(TotalViews, 10),
-          DailyViews: [],
-        };
-        return acc;
-      },
-      {}
-    );
-
-    // Fill in daily views for each category
-    dailyViewsByCategoryResult.forEach(
-      ({ productCategory, ViewDate, DailyViews }) => {
-        if (combinedResult[productCategory]) {
-          combinedResult[productCategory].DailyViews.push({
-            ViewDate,
-            DailyViews: parseInt(DailyViews, 10),
-          });
-        }
-      }
-    );
-
-    return combinedResult;
+    return totalViewsByCategoryResult[0];
   } catch (error) {
     console.error("Error combining product view data by category:", error);
     throw error;
@@ -256,13 +103,14 @@ async function fetchSalesByProduct(appId) {
   try {
     const sql = `
       SELECT 
-        JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.productName')) AS ProductName,
-        COUNT(*) AS UnitsSold,
+         JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.productName')) AS ProductName,
+        COUNT(*) AS Count,
         SUM(JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.productPrice'))) AS TotalRevenue
       FROM events
       WHERE appId = ? AND event = 'Purchase'
       GROUP BY ProductName
-      ORDER BY TotalRevenue DESC;
+      ORDER BY TotalRevenue DESC
+         LIMIT 10;
     `;
     const [results] = await pool.query(sql, [appId]);
     return results;
@@ -276,12 +124,13 @@ async function fetchSalesByCategory(appId) {
     const sql = `
       SELECT 
         JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.productCategory')) AS ProductCategory,
-        COUNT(*) AS UnitsSold,
+        COUNT(*) AS Count,
         SUM(JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.productPrice'))) AS TotalRevenue
       FROM events
       WHERE appId = ? AND event = 'Purchase'
-      GROUP BY ProductCategory
-      ORDER BY TotalRevenue DESC;
+      GROUP BY productCategory
+      ORDER BY TotalRevenue DESC
+         LIMIT 10;
     `;
     const [results] = await pool.query(sql, [appId]);
     return results;
@@ -294,14 +143,15 @@ async function fetchDailySalesByProduct(appId) {
   try {
     const sql = `
       SELECT 
-        DATE(FROM_UNIXTIME(timestamp / 1000)) AS SaleDate,
         JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.productName')) AS ProductName,
-        COUNT(*) AS UnitsSold,
+        DATE(FROM_UNIXTIME(timestamp / 1000)) AS SaleDate,
+        COUNT(*) AS Count,
         SUM(JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.productPrice'))) AS DailyRevenue
       FROM events
       WHERE appId = ? AND event = 'Purchase'
       GROUP BY SaleDate, ProductName
-      ORDER BY SaleDate DESC, DailyRevenue DESC;
+      ORDER BY SaleDate DESC, DailyRevenue DESC
+         LIMIT 10;
     `;
     const [results] = await pool.query(sql, [appId]);
     return results;
@@ -316,12 +166,13 @@ async function fetchDailySalesByCategory(appId) {
       SELECT 
         DATE(FROM_UNIXTIME(timestamp / 1000)) AS SaleDate,
         JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.productCategory')) AS ProductCategory,
-        COUNT(*) AS UnitsSold,
+        COUNT(*) AS Count,
         SUM(JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.productPrice'))) AS DailyRevenue
       FROM events
       WHERE appId = ? AND event = 'Purchase'
       GROUP BY SaleDate, ProductCategory
-      ORDER BY SaleDate DESC, DailyRevenue DESC;
+      ORDER BY SaleDate DESC, DailyRevenue DESC
+         LIMIT 10;
     `;
     const [results] = await pool.query(sql, [appId]);
     return results;

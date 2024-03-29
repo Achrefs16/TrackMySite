@@ -115,7 +115,7 @@ exports.getBounceRate = async (req, res) => {
 
   try {
     const bounceRate = await BounceRate(appId);
-    res.json({ BounceRate: bounceRate });
+    res.json(bounceRate);
   } catch (error) {
     console.error("Error in getBounceRate:", error);
     res
@@ -153,7 +153,7 @@ exports.getAvgEventsPage = async (req, res) => {
 
   try {
     const AvgEventPage = await AvgEventsPage(appId);
-    res.json({ AvgEventsPage: AvgEventPage });
+    res.json(AvgEventPage);
   } catch (error) {
     console.error("Error in getPageEngagement:", error);
     res.status(500).json({

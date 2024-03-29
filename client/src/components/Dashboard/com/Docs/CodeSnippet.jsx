@@ -14,19 +14,21 @@ const CodeSnippet = ({ code }) => {
   };
 
   return (
-    <div className="bg-gray-100 border border-gray-300 py-2 px-3 rounded-lg font-medium text-slate-800 w-3/4 flex justify-between ">
+    <div className="bg-slate-800 border border-gray-300 py-2 px-3 rounded-lg font-medium text-slate-800 w-3/4 flex justify-between ">
       <div>
         <pre className="mb-4">
-          <code>{code}</code>
+          <code className="text-base font-medium text-green-500 break-words">
+            {code}
+          </code>
         </pre>
       </div>
       {copySuccess ? (
-        <div className="  py-1.5 px-2 font-semibold rounded-lg mb-4  flex items-center gap-2">
+        <div className="  py-1.5 px-2 font-semibold text-white rounded-lg mb-4  flex mt-2  gap-2">
           {copySuccess}
         </div>
       ) : (
         <button
-          className=" py-1.5 px-2 font-semibold rounded-lg mb-4  flex items-center gap-2"
+          className=" py-1.5 px-2 font-semibold text-white border-white rounded-lg mb-4 float-end flex mt-2  gap-2"
           onClick={() => copyToClipboard(code)}
         >
           {" "}

@@ -1,8 +1,8 @@
 const pool = require("../db/database");
 
 exports.getTotalVisitors = async (req, res) => {
-  const { appId } = req.query;
-  const { interval } = req.params; // e.g., 'day', 'week', 'month'
+  const appId = req.query.appId;
+  const interval = req.params.interval;
 
   if (!appId) {
     return res.status(400).json({ error: "appId is required" });
@@ -23,7 +23,9 @@ async function fetchUserAnalyticsByInterval(appId, interval) {
   switch (interval) {
     case "day":
       condition = `DATE(FROM_UNIXTIME(timestamp / 1000)) = CURRENT_DATE`;
-      // No sub-interval breakdown for a single day
+      breakdownGroupBy = `DATE_FORMAT(FROM_UNIXTIME(timestamp / 1000), '%Y-%m-%d %H:00:00')
+
+`;
       break;
     case "week":
       condition = `FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 1 week)`;
@@ -43,7 +45,7 @@ async function fetchUserAnalyticsByInterval(appId, interval) {
       break;
     case "year":
       condition = `FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 12 MONTH)`;
-      breakdownGroupBy = `DATE(FROM_UNIXTIME(timestamp / 1000))`;
+      breakdownGroupBy = `DATE_FORMAT(FROM_UNIXTIME(timestamp / 1000), '%Y-%m')`; // Group by year and month
       break;
   }
 
@@ -87,7 +89,7 @@ async function fetchUserAnalyticsByInterval(appId, interval) {
 
 ///////////////////////////////////new users
 exports.getNewUsersLastWeek = async (req, res) => {
-  const { appId } = req.query;
+  const appId = req.query.appId;
 
   if (!appId) {
     return res.status(400).json({ error: "appId is required" });
@@ -95,7 +97,7 @@ exports.getNewUsersLastWeek = async (req, res) => {
 
   try {
     const newUsers = await fetchNewUsers(appId);
-    res.json({ NewUsersLastWeek: newUsers });
+    res.json({ NewUsers: newUsers });
   } catch (error) {
     console.error("Error in getNewUsersLastWeek:", error);
     res.status(500).json({ error: "Error fetching new users data" });
@@ -105,7 +107,7 @@ async function fetchNewUsers(appId) {
   const newUsersSql = `
     SELECT COUNT(*) AS NewUsers
     FROM users
-    WHERE appId = ? AND timestamp >= UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 1 WEEK));
+    WHERE appId = ? AND FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 1 week);
   `;
 
   try {
@@ -172,7 +174,7 @@ async function fetchUserLoyalty(appId) {
 }
 
 exports.getReturningUsers = async (req, res) => {
-  const { appId } = req.query;
+  const appId = req.query.appId;
   if (!appId) {
     return res.status(400).json({ error: "appId is required" });
   }
@@ -186,7 +188,7 @@ exports.getReturningUsers = async (req, res) => {
 };
 
 exports.getUserLoyalty = async (req, res) => {
-  const { appId } = req.query;
+  const appId = req.query.appId;
   if (!appId) {
     return res.status(400).json({ error: "appId is required" });
   }
@@ -207,7 +209,8 @@ async function fetchGeographicDistribution(appId) {
     FROM users
     WHERE appId = ? AND country IS NOT NULL AND city IS NOT NULL
     GROUP BY country, city
-    ORDER BY UserCount DESC;
+    ORDER BY UserCount DESC
+    
   `;
 
   try {
@@ -220,7 +223,7 @@ async function fetchGeographicDistribution(appId) {
 }
 
 exports.getGeographicDistribution = async (req, res) => {
-  const { appId } = req.query;
+  const appId = req.query.appId;
   if (!appId) {
     return res.status(400).json({ error: "appId is required" });
   }
@@ -259,7 +262,7 @@ async function fetchDeviceAndBrowserUsage(appId) {
 // Inside visitorsController.js
 
 exports.getDeviceAndBrowserUsage = async (req, res) => {
-  const { appId } = req.query;
+  const appId = req.query.appId;
   if (!appId) {
     return res.status(400).json({ error: "appId is required" });
   }
@@ -298,14 +301,14 @@ async function fetchLanguagePreferences(appId) {
 // Inside visitorsController.js
 
 exports.getLanguagePreferences = async (req, res) => {
-  const { appId } = req.query;
+  const appId = req.query.appId;
   if (!appId) {
     return res.status(400).json({ error: "appId is required" });
   }
 
   try {
-    const languagePreferences = await fetchLanguagePreferences(appId);
-    res.json({ LanguagePreferences: languagePreferences });
+    const languages = await fetchLanguagePreferences(appId);
+    res.json({ Languages: languages });
   } catch (error) {
     console.error("Error in getLanguagePreferences:", error);
     res.status(500).json({ error: "Error fetching language preferences data" });

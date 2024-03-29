@@ -8,11 +8,14 @@ const isUserAuthenticated = (req, res, next) => {
       if (err) {
         return res.sendStatus(403); // Forbidden
       }
+
       req.user = user; // Add the user payload to the request object
       next(); // Proceed to the next middleware or route handler
     });
   } else {
-    res.sendStatus(401); // Unauthorized
+    res.sendStatus(401).json({
+      message: "Unauthorized: appId does not exist",
+    }); // Unauthorized
   }
 };
 module.exports = {

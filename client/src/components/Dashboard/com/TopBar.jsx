@@ -43,7 +43,7 @@ const TopBar = () => {
 
   const letter = userDetails.name.charAt(0);
   return (
-    <div className="h-12 bg-white border-b border-gray-300 flex items-center justify-between pl-5 pr-28">
+    <div className=" h-12 bg-white border-b border-gray-300 flex items-center justify-between pl-5 pr-28">
       <div className="flex">
         <div className="flex items-center gap-1  pr-7 h-4/6 border-r border-gray-300">
           <img

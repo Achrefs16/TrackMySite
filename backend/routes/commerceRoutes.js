@@ -1,13 +1,45 @@
 const express = require("express");
 const router = express.Router();
 const commerceController = require("../controllers/commerceController");
-
-router.get("/ac", commerceController.getAddToCartAnalysis);
-router.get("/ag", commerceController.getAddToCartCategoryAnalysis);
-router.get("/cpv", commerceController.getCombinedProductViews);
-router.get("/pvc", commerceController.getProductViewsByCategory);
-router.get("/sp", commerceController.getSalesByProduct);
-router.get("/spd", commerceController.getDailySalesByProduct);
-router.get("/sc", commerceController.getSalesByCategory);
-router.get("/scd", commerceController.getDailySalesByCategory);
+const { isUserAuthenticated } = require("../middlewares/isUserAuthenticated");
+router.get(
+  "/addcart",
+  isUserAuthenticated,
+  commerceController.getAddToCartAnalysis
+);
+router.get(
+  "/addcate",
+  isUserAuthenticated,
+  commerceController.getAddToCartCategoryAnalysis
+);
+router.get(
+  "/productview",
+  isUserAuthenticated,
+  commerceController.getCombinedProductViews
+);
+router.get(
+  "/viewcate",
+  isUserAuthenticated,
+  commerceController.getProductViewsByCategory
+);
+router.get(
+  "/salesproduct",
+  isUserAuthenticated,
+  commerceController.getSalesByProduct
+);
+router.get(
+  "/salesproductd",
+  isUserAuthenticated,
+  commerceController.getDailySalesByProduct
+);
+router.get(
+  "/salescate",
+  isUserAuthenticated,
+  commerceController.getSalesByCategory
+);
+router.get(
+  "/salescated",
+  isUserAuthenticated,
+  commerceController.getDailySalesByCategory
+);
 module.exports = router;

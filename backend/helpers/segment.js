@@ -2,25 +2,22 @@ const pool = require("../db/database");
 
 async function PurchasersByLocation(appId) {
   const purchasersByLocationSql = `
-    SELECT 
-      u.country, 
-      u.city, 
-      COUNT(DISTINCT e.userId) AS NumberOfPurchasers
-    FROM 
-      events e
-    INNER JOIN 
-      users u ON e.userId = u.userId
-    WHERE 
-      e.appId = ? 
-      AND e.event = 'Purchase' 
-      AND u.appId = e.appId
-    GROUP BY 
-      u.country, 
-      u.city
-    ORDER BY 
-      NumberOfPurchasers DESC, 
-      u.country, 
-      u.city;
+ SELECT 
+  u.country, 
+  COUNT(DISTINCT e.userId) AS NumberOfPurchasers
+FROM 
+  events e
+INNER JOIN 
+  users u ON e.userId = u.userId
+WHERE 
+  e.appId = ? 
+  AND e.event = 'Purchase'
+GROUP BY 
+  u.country
+ORDER BY 
+  NumberOfPurchasers DESC, 
+  u.country;
+
   `;
 
   try {
@@ -43,7 +40,6 @@ async function PurchasersByCityInCountry(appId, country) {
       users u ON e.userId = u.userId
     WHERE 
       e.appId = ? 
-      AND u.country = ?
       AND e.event = 'Purchase' 
       AND u.appId = e.appId
     GROUP BY 
@@ -152,3 +148,10 @@ async function CityBySubscriptionPlan(appId) {
     throw error;
   }
 }
+module.exports = {
+  PurchasersByLocation,
+  PurchasersByCityInCountry,
+  CityByContentTypeEngagement,
+  CountryBySubscriptionPlan,
+  CityBySubscriptionPlan,
+};

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const subscribeController = require("../controllers/subscribeController");
 
-router.get("/sd", subscribeController.getSubscriptionData);
-router.get("/usd", subscribeController.getUnsubscribeData);
+router.get("/subscribe", subscribeController.getSubscriptionData);
+router.get("/unsubscribe", subscribeController.getUnsubscribeData);
+router.get("/conversion", subscribeController.getfetchTotalConversion);
 module.exports = router;

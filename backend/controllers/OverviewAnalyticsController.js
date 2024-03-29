@@ -47,23 +47,23 @@ async function fetchDataByIntervalAndSubIntervals(interval, appId, entityType) {
       break;
     case "week":
       condition = `FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 1 week)`;
-      breakdownGroupBy = `DATE_FORMAT(FROM_UNIXTIME(timestamp / 1000), '%d/%m')`;
+      breakdownGroupBy = `DATE(FROM_UNIXTIME(timestamp / 1000))`;
       break;
     case "month":
       condition = `FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)`;
-      breakdownGroupBy = `DATE_FORMAT(FROM_UNIXTIME(timestamp / 1000), '%d/%m') `;
+      breakdownGroupBy = `DATE(FROM_UNIXTIME(timestamp / 1000))`;
       break;
     case "quarter":
       condition = `FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 3 MONTH)`;
-      breakdownGroupBy = `WEEK(FROM_UNIXTIME(timestamp / 1000))`;
+      breakdownGroupBy = `DATE_FORMAT(FROM_UNIXTIME(timestamp / 1000), '%Y-%m')`;
       break;
     case "halfYear":
       condition = `FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH)`;
-      breakdownGroupBy = `WEEK(FROM_UNIXTIME(timestamp / 1000))`;
+      breakdownGroupBy = `DATE_FORMAT(FROM_UNIXTIME(timestamp / 1000), '%Y-%m')`;
       break;
     case "year":
       condition = `FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 12 MONTH)`;
-      breakdownGroupBy = `MONTH(FROM_UNIXTIME(timestamp / 1000))`;
+      breakdownGroupBy = `DATE_FORMAT(FROM_UNIXTIME(timestamp / 1000), '%Y-%m')`; // Group by year and month
       break;
   }
   let distinctColumn = "id"; // Default

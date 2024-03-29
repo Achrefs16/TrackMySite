@@ -1,12 +1,41 @@
 const express = require("express");
 const router = express.Router();
 const visitorsController = require("../controllers/visitorsController");
+const { isUserAuthenticated } = require("../middlewares/isUserAuthenticated");
 
-router.get("/tv/:interval", visitorsController.getTotalVisitors);
-router.get("/nv", visitorsController.getNewUsersLastWeek);
-router.get("/rv", visitorsController.getReturningUsers);
-router.get("/lv", visitorsController.getUserLoyalty);
-router.get("/gv", visitorsController.getGeographicDistribution);
-router.get("/dv", visitorsController.getDeviceAndBrowserUsage);
-router.get("/language", visitorsController.getLanguagePreferences);
+router.get(
+  "/totalvisitor/:interval",
+  isUserAuthenticated,
+  visitorsController.getTotalVisitors
+);
+router.get(
+  "/newusers",
+  isUserAuthenticated,
+  visitorsController.getNewUsersLastWeek
+);
+router.get(
+  "/returningusers",
+  isUserAuthenticated,
+  visitorsController.getReturningUsers
+);
+router.get(
+  "/userloyalty",
+  isUserAuthenticated,
+  visitorsController.getUserLoyalty
+);
+router.get(
+  "/geographicdistribution",
+  isUserAuthenticated,
+  visitorsController.getGeographicDistribution
+);
+router.get(
+  "/devices",
+  isUserAuthenticated,
+  visitorsController.getDeviceAndBrowserUsage
+);
+router.get(
+  "/language",
+  isUserAuthenticated,
+  visitorsController.getLanguagePreferences
+);
 module.exports = router;
