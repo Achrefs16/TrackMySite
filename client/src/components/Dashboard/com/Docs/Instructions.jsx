@@ -71,7 +71,7 @@ new Vue({
   return (
     <div className="w-full p-10 bg-gray-50">
       <h1 className="text-slate-800 font-bold text-2xl mb-4">
-        Installation instructions
+        Instructions d'installation
       </h1>
       <ul className="flex w-96 h-8 justify-between mb-4 text-lg text-slate-600 font-semibold ">
         {Object.keys(instructions).map((framework) => (
@@ -91,11 +91,13 @@ new Vue({
       <p className="bg-gray-100 border border-gray-300 py-2 px-4 rounded-lg w-3/4 text-slate-800 mb-6">
         {instructions[activeTab].text}
       </p>
-      <p className=" text-slate-800 mb-3 font-medium">Install the package:</p>
+      <p className=" text-slate-800 mb-3 font-medium">Installer le paquet :</p>
       <p className="bg-gray-100 border border-gray-300 py-2 px-4 rounded-lg w-3/4 text-slate-800 mb-6">
         npm install TrackMySite
       </p>
-      <p className=" text-slate-800 mb-3 font-medium">Import and initialize:</p>
+      <p className=" text-slate-800 mb-3 font-medium">
+        Importer et initialiser :
+      </p>
 
       <CodeSnippet code={instructions[activeTab].code} />
     </div>

@@ -30,7 +30,7 @@ const SideBar = () => {
       <NavLink
         to="/dashboard/overview"
         data-tooltip-id="Overview"
-        data-tooltip-content="Overview"
+        data-tooltip-content="Aperçu général"
         className={({ isActive }) =>
           isActive
             ? "bg-brand text-white mx-auto rounded transition duration-300 w-8 h-8 mb-4 flex justify-center items-center"
@@ -43,7 +43,7 @@ const SideBar = () => {
 
       <NavLink
         data-tooltip-id="Visitors"
-        data-tooltip-content="Visitors"
+        data-tooltip-content="Utilisateurs"
         to="/dashboard/visitors/engagement"
         className={({ isActive }) =>
           isActive
@@ -56,7 +56,7 @@ const SideBar = () => {
       </NavLink>
       <NavLink
         data-tooltip-id="Conversion"
-        data-tooltip-content="Conversion"
+        data-tooltip-content="Revenu"
         to="/dashboard/conversion/purchase"
         className={({ isActive }) =>
           isActive
@@ -69,7 +69,7 @@ const SideBar = () => {
       </NavLink>
       <NavLink
         data-tooltip-id="Events"
-        data-tooltip-content="Behavior"
+        data-tooltip-content="Comportement"
         to="/dashboard/behaivor/pages"
         className={({ isActive }) =>
           isActive
@@ -96,7 +96,7 @@ const SideBar = () => {
       </NavLink>
       <NavLink
         data-tooltip-id="Settings"
-        data-tooltip-content="Settings"
+        data-tooltip-content="Paramètres"
         to="/dashboard/settings"
         className={({ isActive }) =>
           isActive

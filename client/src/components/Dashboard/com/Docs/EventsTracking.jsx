@@ -4,155 +4,157 @@ import React, { useState } from "react";
 const docsData = [
   {
     name: "trackLogin",
-    description: "Tracks user login events.",
+    description: "Enregistre les événements de connexion des utilisateurs.",
     parameters: [
       {
-        name: "method",
+        name: "méthode",
         description:
-          'The method used for logging in (e.g., "email", "social").',
+          'La méthode utilisée pour se connecter (par exemple, "email", "social").',
       },
     ],
     example: `trackLogin('email');`,
   },
   {
     name: "trackSignUp",
-    description: "Tracks user sign-up events.",
+    description: "Enregistre les événements d'inscription des utilisateurs.",
     parameters: [
       {
-        name: "method",
+        name: "méthode",
         description:
-          'The method used for signing up (e.g., "email", "social").',
+          'La méthode utilisée pour s\'inscrire (par exemple, "email", "social").',
       },
     ],
     example: `trackSignUp('email');`,
   },
   {
     name: "trackSubscribe",
-    description: "Tracks subscription events.",
+    description: "Enregistre les événements d'abonnement.",
     parameters: [
       {
-        name: "subscriptionPlan",
-        description: "The name of the subscription plan.",
+        name: "planAbonnement",
+        description: "Le nom du plan d'abonnement.",
       },
       {
-        name: "amount",
-        description: "The subscription amount.",
+        name: "montant",
+        description: "Le montant de l'abonnement.",
       },
     ],
     example: `trackSubscribe('premium', 9.99);`,
   },
   {
     name: "trackUnsubscribe",
-    description: "Tracks unsubscribe events.",
+    description: "Enregistre les événements de désabonnement.",
     parameters: [
       {
-        name: "reason",
-        description: "Reason for unsubscribing.",
+        name: "raison",
+        description: "Raison du désabonnement.",
       },
     ],
     example: `trackUnsubscribe('Not enough content');`,
   },
   {
     name: "trackProductView",
-    description: "Tracks when a user views a product.",
+    description: "Enregistre quand un utilisateur consulte un produit.",
     parameters: [
       {
-        name: "productName",
-        description: "The name of the viewed product.",
+        name: "nomProduit",
+        description: "Le nom du produit consulté.",
       },
       {
-        name: "productCategory",
-        description: "The category of the viewed product.",
+        name: "catégorieProduit",
+        description: "La catégorie du produit consulté.",
       },
     ],
     example: `trackProductView('iPhone 12', 'Smartphones');`,
   },
   {
     name: "trackAddToCart",
-    description: "Tracks when a user adds a product to their cart.",
+    description:
+      "Enregistre quand un utilisateur ajoute un produit à son panier.",
     parameters: [
       {
-        name: "productName",
-        description: "The name of the product added to the cart.",
+        name: "nomProduit",
+        description: "Le nom du produit ajouté au panier.",
       },
       {
-        name: "productCategory",
-        description: "The category of the product added to the cart.",
+        name: "catégorieProduit",
+        description: "La catégorie du produit ajouté au panier.",
       },
     ],
     example: `trackAddToCart('iPhone 12', 'Smartphones');`,
   },
   {
     name: "trackPurchase",
-    description: "Tracks purchase events.",
+    description: "Enregistre les événements d'achat.",
     parameters: [
       {
         name: "orderId",
-        description: "The order ID.",
+        description: "L'ID de commande.",
       },
       {
         name: "name",
-        description: "The name of the product.",
+        description: "Le nom du produit.",
       },
       {
         name: "category",
-        description: "The category of the product.",
+        description: "La catégorie du produit.",
       },
       {
         name: "price",
-        description: "The price of the product.",
+        description: "Le prix du produit.",
       },
     ],
     example: `trackPurchase('123456', 'iPhone 12', 'Smartphones', 999);`,
   },
   {
     name: "trackContentEngagement",
-    description: "Tracks content engagement events.",
+    description: "Enregistre les événements d'engagement avec le contenu.",
     parameters: [
       {
         name: "articleId",
-        description: "The ID of the article.",
+        description: "L'ID de l'article.",
       },
       {
         name: "contentType",
-        description: "The type of content engaged with.",
+        description: "Le type de contenu avec lequel l'utilisateur a interagi.",
       },
       {
         name: "details",
-        description: "Additional details regarding the engagement.",
+        description: "Détails supplémentaires concernant l'engagement.",
       },
     ],
-    example: `trackContentEngagement('001', 'video', 'Watched full video');`,
+    example: `trackContentEngagement('001', 'vidéo', 'Visionnage complet de la vidéo');`,
   },
   {
     name: "trackError",
-    description: "Tracks errors encountered in the application.",
+    description: "Enregistre les erreurs rencontrées dans l'application.",
     parameters: [
       {
         name: "errorMessage",
-        description: "The error message.",
+        description: "Le message d'erreur.",
       },
       {
         name: "errorStack",
-        description: "The error stack trace.",
+        description: "La trace de la pile d'erreurs.",
       },
     ],
-    example: `trackError('404 Not Found', 'ErrorStack...');`,
+    example: `trackError('404 Not Found', 'Trace d'erreur...');`,
   },
   {
-    name: "Custom Event",
-    description: "Tracks custom events specified by the developer.",
+    name: "Événement personnalisé",
+    description:
+      "Enregistre les événements personnalisés spécifiés par le développeur.",
     parameters: [
       {
-        name: "eventName",
-        description: "The name of the event.",
+        name: "nomÉvénement",
+        description: "Le nom de l'événement.",
       },
       {
-        name: "eventDetails",
-        description: "Details about the event.",
+        name: "détailsÉvénement",
+        description: "Détails sur l'événement.",
       },
     ],
-    example: `track('CustomEvent', { detail: 'Example Detail' });`,
+    example: `track('Événement personnalisé', { détail: 'Détail exemple' });`,
   },
 ];
 

@@ -70,7 +70,7 @@ const Pages = () => {
 
   const series = [
     {
-      name: "Page view",
+      name: "Vue",
       data: pageViewData.map((item) => item.value),
     },
   ];
@@ -81,13 +81,13 @@ const Pages = () => {
           <thead className=" text-gray-600">
             <tr>
               <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider rounded-tl-lg">
-                Page Name
+                Nom de la page
               </th>
               <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider">
-                Avg Time Spent
+                Temps moyen passé
               </th>
               <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider">
-                Avg Scroll Depth
+                Profondeur moyenne de défilement
               </th>
             </tr>
           </thead>
@@ -123,7 +123,7 @@ const Pages = () => {
           categories={categories}
           width="100%"
           height={326}
-          title={"Page view"}
+          title={"Vue de la page"}
         />
       </div>
     </div>

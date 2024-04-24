@@ -1,7 +1,7 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
-const BarChart = ({ series, categories }) => {
+const BarChart = ({ series, categories, height, width }) => {
   const options = {
     chart: {
       height: 200,
@@ -66,9 +66,6 @@ const BarChart = ({ series, categories }) => {
       },
     },
     title: {
-      text: "Users browsers",
-      floating: true,
-      offsetY: 180,
       align: "center",
       style: {
         color: "#444",
@@ -83,8 +80,8 @@ const BarChart = ({ series, categories }) => {
           options={options}
           series={series}
           type="bar"
-          height={200}
-          width={500}
+          height={height}
+          width={width}
         />
       </div>
       <div id="html-dist"></div>

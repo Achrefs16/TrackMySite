@@ -75,31 +75,33 @@ const Devices = () => {
 
   const seriesb = [
     {
-      name: "Browser Count",
+      name: "Nombre d'utilisateurs par navigateur",
       data: browserChartData.map((item) => item.value),
     },
   ];
   const categories = browserChartData.map((item) => item.name);
   return (
     <div className="pt-4 ">
-      <div className=" flex gap-4 justify-center mb-4">
-        <div className=" px-10 py-3 bg bg-white w-fit shadow rounded-lg ">
+      <div className=" flex gap-4 justify-center mb-4 w-">
+        <div className=" px-10 py-3 bg bg-white w-fit border border-gray-300 rounded ">
           <DoughnutChart
             series={series}
             labels={labels}
           />
         </div>
-        <div className=" px-10 py-3 bg bg-white w-fit shadow rounded-lg ">
+        <div className=" px-10 py-3 bg bg-white w-fit border border-gray-300 rounded ">
           <DoughnutChart
             series={seriesd}
             labels={labelsd}
           />
         </div>
       </div>
-      <div className=" px-10 py-3 bg bg-white w-fit shadow rounded-lg m-auto">
+      <div className=" px-10 py-3 bg bg-white w-max border border-gray-300 rounded m-auto">
         <BarChart
           series={seriesb}
           categories={categories}
+          width={700}
+          height={225}
         />
       </div>
     </div>

@@ -97,7 +97,7 @@ const Interaction = () => {
 
   const series = [
     {
-      name: "Event count",
+      name: "Nombre",
       data: eventData.map((item) => item.Count),
     },
   ];
@@ -106,7 +106,7 @@ const Interaction = () => {
   // Preparing series data
   const seriess = [
     {
-      name: "Average Event",
+      name: "Nombre moyen Événement",
       data: event.map((item) => item.AvgEvents),
     },
   ];
@@ -124,15 +124,15 @@ const Interaction = () => {
           categories={categoriess}
           width={525}
           height={275}
-          title={"Average event per page "}
+          title={"Nombre moyen d'événements par page "}
         />
       </div>
       <div className="my-4 bg-white p-4 border border-gray-300 rounded-md">
-        <h2 className="text-lg font-semibold mb-4">Top User Journeys</h2>
+        <h2 className="text-lg font-semibold mb-4">événements par page</h2>
         <table className="border-collapse w-full">
           <thead>
             <tr>
-              <th className="p-3 font-bold text-left">event</th>
+              <th className="p-3 font-bold text-left">événement</th>
               <th className="p-3 font-bold text-left">page</th>
               <th className="p-3 font-bold text-left">Occurrences</th>
             </tr>

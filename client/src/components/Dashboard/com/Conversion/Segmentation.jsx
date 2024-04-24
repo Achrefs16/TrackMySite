@@ -57,14 +57,12 @@ const Segmentation = () => {
           );
           const dataSub = responssub.data;
 
-          console.log(data);
           setPurchasecontry(data);
-          console.log(datau);
+
           setPurchase(datau);
-          console.log(datasubc);
 
           setSubscribecontry(datasubc);
-          console.log(dataSub);
+
           setSubscribe(dataSub);
         } catch (error) {
           console.error("Error fetching languages data:", error);
@@ -86,14 +84,14 @@ const Segmentation = () => {
   const categories = purchasecontry.map((item) => item.country);
   const seriesData = [
     {
-      name: "Purchasers",
+      name: "Acheteurs",
       data: purchasecontry.map((item) => item.NumberOfPurchasers),
     },
   ];
   const categoriescity = purchase.map((item) => item.city);
   const seriesDatacity = [
     {
-      name: "Purchasers",
+      name: "Acheteurs",
       data: purchase.map((item) => item.NumberOfPurchasers),
     },
   ];
@@ -105,7 +103,7 @@ const Segmentation = () => {
             categories={categoriescity}
             series={seriesDatacity}
             height={250}
-            title={"Purchasers By City"}
+            title={"Acheteurs par ville"}
           />
         </div>
         <div className="w-1/2">
@@ -113,7 +111,7 @@ const Segmentation = () => {
             categories={categories}
             series={seriesData}
             height={250}
-            title={"Purchasers By Country"}
+            title={"Acheteurs par pays"}
           />
         </div>
       </div>
@@ -124,13 +122,13 @@ const Segmentation = () => {
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Subcription plan{" "}
+                  Plan d'abonnement{" "}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  City
+                  Ville
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Count
+                  Nombre
                 </th>
               </tr>
             </thead>
@@ -160,13 +158,13 @@ const Segmentation = () => {
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Subcription plan{" "}
+                  Plan d'abonnement{" "}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Country
+                  Pays
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Count
+                  Ville
                 </th>
               </tr>
             </thead>

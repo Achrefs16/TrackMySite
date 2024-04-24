@@ -80,7 +80,7 @@ const SginUp = () => {
                 htmlFor="name"
                 className="block text-sm font-medium leading-6 text-gray-500"
               >
-                Full Name
+                Nom et prénom
               </label>
               <div className="mt-2">
                 <input
@@ -99,7 +99,7 @@ const SginUp = () => {
                 htmlFor="email"
                 className="block text-sm font-medium leading-6 text-gray-500"
               >
-                Email address
+                Adresse e-mail
               </label>
               <div className="mt-2">
                 <input
@@ -120,7 +120,7 @@ const SginUp = () => {
                 htmlFor="password"
                 className="block text-sm font-medium leading-6 text-gray-500"
               >
-                Password
+                Mot de passe
               </label>
               <div className="mt-2">
                 <input
@@ -152,7 +152,7 @@ const SginUp = () => {
                 htmlFor="confirmPassword"
                 className="block text-sm font-medium leading-6 text-gray-500"
               >
-                Confirm Password
+                Confirmation du mot de passe
               </label>
               <div className="mt-2">
                 <input
@@ -168,7 +168,9 @@ const SginUp = () => {
                 />
               </div>
               {!passwordsMatch && confirmPassword && (
-                <div className="text-sm text-sunny">Passwords do not match</div>
+                <div className="text-sm text-sunny">
+                  Les mots de passe ne correspondent pas
+                </div>
               )}
             </div>
 
@@ -185,19 +187,19 @@ const SginUp = () => {
                 <div className="w-4 h-4 border border-slate-400 rounded-md peer-checked:bg-brand"></div>
               </label>
               <p className="text-slate-500 text-sm">
-                I accept the{" "}
+                J'accepte les
                 <a
                   href=""
                   className="text-brand  font-semibold"
                 >
-                  Terms of Use
+                  conditions d'utilisation
                 </a>{" "}
-                and{" "}
+                et la{" "}
                 <a
                   className="text-brand  font-semibold"
                   href=""
                 >
-                  Privacy Policy
+                  politique de confidentialité
                 </a>
                 .
               </p>
@@ -209,12 +211,12 @@ const SginUp = () => {
                 className="flex w-full justify-center rounded-md bg-brand px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bratext-brand"
                 disabled={!isTermsAccepted}
               >
-                Sign Up
+                S'inscrire
               </button>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex-grow border-t border-gray-300"></div>
-              <span className="flex-shrink mx-4 text-gray-600">Or</span>
+              <span className="flex-shrink mx-4 text-gray-600">Ou bien</span>
               <div className="flex-grow border-t border-gray-300"></div>
             </div>
             <div className="flex items-center justify-between">
@@ -242,13 +244,13 @@ const SginUp = () => {
           </form>
         </div>
         <p className="mt-5 text-center text-base  text-gray-500">
-          Already have account?
+          Vous avez déjà un compte ?
           <a
             href="#"
             className="font-semibold leading-6 text-brand hover:text-indigo-400"
           >
             {" "}
-            Sign In
+            Se connecter
           </a>
         </p>
       </div>

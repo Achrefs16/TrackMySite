@@ -97,7 +97,7 @@ const InteractionE = () => {
 
     seriespv = [
       {
-        name: "View",
+        name: "Vue",
         data: seriesDatapv,
       },
     ];
@@ -109,7 +109,7 @@ const InteractionE = () => {
 
     seriescv = [
       {
-        name: "View",
+        name: "Vue",
         data: seriesDatacv,
       },
     ];
@@ -121,7 +121,7 @@ const InteractionE = () => {
 
     seriesap = [
       {
-        name: "Adds",
+        name: "Ajouts",
         data: seriesDataap,
       },
     ];
@@ -133,7 +133,7 @@ const InteractionE = () => {
 
     seriesac = [
       {
-        name: "Adds",
+        name: "Ajouts",
         data: seriesDataac,
       },
     ];
@@ -144,7 +144,7 @@ const InteractionE = () => {
       <div className="flex gap-4 w-full mt-4">
         <div className="   w-1/2 ">
           <p className="text-gray-700 text-lg font-medium mb-2">
-            Top Product View
+            Les Produits Les Plus Vus
           </p>
           <HorBarChart
             categories={categoriepv}
@@ -155,7 +155,7 @@ const InteractionE = () => {
         </div>
         <div className="   w-1/2 ">
           <p className="text-gray-700 text-lg font-medium mb-2">
-            Top Category View
+            Les Catégories Les Plus Vus
           </p>
           <HorBarChart
             categories={categoriecv}
@@ -168,7 +168,7 @@ const InteractionE = () => {
       <div className="flex gap-4 w-full mt-4">
         <div className="   w-1/2 ">
           <p className="text-gray-700 text-lg font-medium mb-2">
-            Top Product Add to Cart
+            Le Plus De Catégories Ajouter Au Panier
           </p>
           <HorBarChart
             categories={categorieap}
@@ -179,7 +179,7 @@ const InteractionE = () => {
         </div>
         <div className="   w-1/2 ">
           <p className="text-gray-700 text-lg font-medium mb-2">
-            Top Category Add to Cart
+            Le Plus De Category Ajouter Au Panier
           </p>
           <HorBarChart
             categories={categorieac}

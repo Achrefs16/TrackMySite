@@ -5,9 +5,12 @@ import { Outlet } from "react-router-dom";
 const Docs = () => {
   const Links = [
     { name: "Installation", path: "/dashboard/documentation/installation" },
-    { name: "Advance Tracking", path: "/dashboard/documentation/tracking" },
     {
-      name: "Interaction and Events",
+      name: "Fonctions de suivi avancée",
+      path: "/dashboard/documentation/tracking",
+    },
+    {
+      name: "Interaction et événements",
       path: "/dashboard/documentation/events",
     },
   ];

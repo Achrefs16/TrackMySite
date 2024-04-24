@@ -7,6 +7,7 @@ const {
   insertSessionData,
   appIdVerfication,
 } = require("../controllers/collectorsController");
+const { isAuthenticated } = require("../middlewares/isAuthenticated");
 // Middleware to log the IP and perform GeoIP lookup
 
 router.use((req, res, next) => {
@@ -18,7 +19,7 @@ router.use((req, res, next) => {
 });
 
 // Route for user data
-router.post("/user", async (req, res) => {
+router.post("/user", isAuthenticated, async (req, res) => {
   try {
     await insertUserData(req.body);
     res.json({
@@ -34,7 +35,7 @@ router.post("/user", async (req, res) => {
 });
 
 // Route for session data
-router.post("/session", async (req, res) => {
+router.post("/session", isAuthenticated, async (req, res) => {
   try {
     await insertSessionData(req.body);
     res.json({

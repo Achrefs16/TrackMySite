@@ -6,9 +6,9 @@ import Bar from "../Bar";
 const Visitors = () => {
   const Links = [
     { name: "Engagement", path: "/dashboard/visitors/engagement" },
-    { name: "Demographic", path: "/dashboard/visitors/demographic" },
-    { name: "Devices", path: "/dashboard/visitors/devices" },
-    { name: "Language", path: "/dashboard/visitors/language" },
+    { name: "Démographie", path: "/dashboard/visitors/demographic" },
+    { name: "Appareils", path: "/dashboard/visitors/devices" },
+    { name: "Langues", path: "/dashboard/visitors/language" },
   ];
   return (
     <>

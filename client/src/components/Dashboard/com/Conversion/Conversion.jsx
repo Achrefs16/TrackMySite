@@ -4,9 +4,9 @@ import Bar from "../Bar";
 import { Outlet } from "react-router-dom";
 const Conversion = () => {
   const Links = [
-    { name: "Purchase", path: "/dashboard/conversion/purchase" },
+    { name: "Achats", path: "/dashboard/conversion/purchase" },
     { name: "Interaction", path: "/dashboard/conversion/interaction" },
-    { name: "Subscription", path: "/dashboard/conversion/subscription" },
+    { name: "Abonnements", path: "/dashboard/conversion/subscription" },
     { name: "Segmentation", path: "/dashboard/conversion/segmentation" },
   ];
   return (

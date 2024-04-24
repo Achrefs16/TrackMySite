@@ -81,7 +81,7 @@ const Session = () => {
   // Preparing series data
   const series = [
     {
-      name: "Session Count",
+      name: "Nombre de sessions",
       data: entrypage.map((item) => item.SessionCount),
     },
   ];
@@ -90,14 +90,14 @@ const Session = () => {
   // Preparing series data
   const seriesl = [
     {
-      name: "Session Count",
+      name: "Nombre de sessions",
       data: lastpage.map((item) => item.SessionCount),
     },
   ];
   return (
     <div>
       <div className=" mb-4 w-fit bg-white rounded border border-gray-300 px-4 py-4 font-semibold  text-gray-500">
-        <p>Average Session duration</p>
+        <p>Durée moyenne de la session</p>
         <p className="text-center font-bold text-4xl my-6 text-slate-800">
           {session} Min
         </p>
@@ -108,14 +108,14 @@ const Session = () => {
           series={series}
           width={525}
           height={250}
-          title={"First page in Session"}
+          title={"Première page de la session"}
         />
         <HorBarChart
           categories={categoriesl}
           series={seriesl}
           width={525}
           height={250}
-          title={"Last page in Session"}
+          title={"Dernière page de la session"}
         />
       </div>
 
@@ -124,13 +124,13 @@ const Session = () => {
           <thead>
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Entry Page
+                Page d'entrée
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Bounce Rate
+                Taux de rebond
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Count
+                Nombre
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Total

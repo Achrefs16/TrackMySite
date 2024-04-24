@@ -87,7 +87,7 @@ const Demographic = () => {
       <div className="flex gap-4 justify-center px-14 text-slate-900">
         <div className="w-1/2 ">
           <h2 className="text-xl font-medium my-8">
-            User Distribution by Country
+            Nombre d'utilisateurs par pays
           </h2>
           <HorBarChart
             categories={labelsC}
@@ -97,7 +97,7 @@ const Demographic = () => {
         </div>
         <div className="w-1/2 ">
           <h2 className="text-xl font-medium my-8">
-            User Distribution by City
+            Nom d'utilisateur par ville
           </h2>
           <HorBarChart
             categories={labelsy}

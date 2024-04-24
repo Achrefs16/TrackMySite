@@ -191,8 +191,7 @@ function getGeolocation() {
 
 async function handleUserSession() {
   // Check if data has already been sent
-  const user = localStorage.getItem("usersent");
-  console.log(getBrowserInfo());
+
   const { latitude, longitude } = await getGeolocation();
   const userData = {
     appId: appId,
@@ -261,13 +260,6 @@ export async function initializeTMS(app) {
   if (status === "success") {
     resolveappIdPromise();
     await handleUserSession();
-    trackClick();
-    trackVisibility();
-    searchQuery();
-    fileDownload();
-    formSubmit();
-    videoInteraction();
-    trackClipboardCopy();
   }
 }
 

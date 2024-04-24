@@ -136,7 +136,7 @@ const Start = () => {
     <>
       <div className="bg-gray-100   h-5/6">
         <div className="  flex justify-between px-10 pt-4">
-          <h1 className=" text-xl text-slate-800 font-bold">Overview </h1>
+          <h1 className=" text-xl text-slate-800 font-bold">Aperçu général</h1>
           <Periode
             selectedPeriod={selectedPeriod}
             handleChange={handleChange}
@@ -146,7 +146,7 @@ const Start = () => {
           <div className=" flex gap-5 w-full justify-center mx-auto ">
             <div className="  bg-white pt-2  rounded-md border border-gray-300 w-fit pr-3 ">
               <h1 className="text-gray-700 font-semibold ml-4 ">
-                Users And Sessions
+                utilisateurs et sessions
               </h1>
               <AreaChart
                 series={seriesDataU}
@@ -156,7 +156,7 @@ const Start = () => {
               />
             </div>
             <div className="  bg-white pt-2  rounded-md border border-gray-300 w-fit pr-3 ">
-              <h1 className="text-gray-700 font-semibold ml-4">Events</h1>
+              <h1 className="text-gray-700 font-semibold ml-4">Evénements</h1>
               <AreaChart
                 series={seriesData}
                 categories={categories}
@@ -166,25 +166,25 @@ const Start = () => {
             </div>
           </div>
         ) : (
-          <div>Loading</div>
+          <div>Chargement</div>
         )}
         {data.events && (
           <div className="flex mt-5 w-full justify-center mx-auto gap-5">
             <Card
-              content={"Total users"}
+              content={"Nombre d'utilisateurs"}
               count={data.users.TotalCount}
             />
             <Card
-              content={"Total sessions"}
+              content={"Nombre des sessions"}
               count={data.sessions.TotalCount}
             />
             <Card
-              content={"Total events"}
+              content={"Total des évènements"}
               count={data.events.TotalCount}
             />
             {conversion && (
               <Card
-                content={"Coversion $"}
+                content={"Revenu $"}
                 count={conversion}
               />
             )}

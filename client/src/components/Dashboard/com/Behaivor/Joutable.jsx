@@ -51,7 +51,7 @@ const JourneyRow = ({ index, journey, occurrences }) => {
               onClick={toggleExpanded}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline whitespace-nowrap"
             >
-              {isExpanded ? "Show Less" : "Show More"}
+              {isExpanded ? "Voir moins" : "Voir plus"}
             </button>
           )}
         </div>
@@ -72,7 +72,7 @@ const Joutable = ({ journeys }) => {
               ID
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Journey
+              Parcours
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Occurrences

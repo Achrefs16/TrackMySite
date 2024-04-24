@@ -60,7 +60,7 @@ const SignIn = () => {
                 htmlFor="email"
                 className="block text-sm font-medium leading-6 text-gray-500"
               >
-                Email address
+                Adresse e-mail
               </label>
               <div className="mt-2">
                 <input
@@ -82,7 +82,7 @@ const SignIn = () => {
                   htmlFor="password"
                   className="block text-sm font-medium leading-6 text-gray-500"
                 >
-                  Password
+                  Mot de passe
                 </label>
               </div>
               <div className="mt-2">
@@ -109,13 +109,15 @@ const SignIn = () => {
                   />
                   <div className="w-4 h-4 border border-slate-400 rounded-md peer-checked:bg-brand"></div>
                 </label>
-                <p className="text-slate-500 font-medium">Remember me</p>
+                <p className="text-slate-500 font-medium">
+                  Mémoriser mon compte
+                </p>
               </div>
               <a
                 href="#"
                 className="font-semibold text-brand hover:text-indigo-500"
               >
-                Forgot password?
+                Mot de passe oublié ?
               </a>
             </div>
             <div>
@@ -123,13 +125,13 @@ const SignIn = () => {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-brand px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bratext-brand"
               >
-                Sign in
+                Se connecter
               </button>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex-grow border-t border-gray-300"></div>
               <span className="flex-shrink mx-4 text-gray-600">
-                Or continue with
+                Ou continuer avec
               </span>
               <div className="flex-grow border-t border-gray-300"></div>
             </div>
@@ -158,13 +160,13 @@ const SignIn = () => {
           </form>
         </div>
         <p className="mt-5 text-center text-base  text-gray-500">
-          Not a member?
+          Vous n'êtes pas encore membre ?
           <a
             href="#"
             className="font-semibold leading-6 text-brand hover:text-indigo-400"
           >
             {" "}
-            Sign Up
+            S'inscrire
           </a>
         </p>
       </div>

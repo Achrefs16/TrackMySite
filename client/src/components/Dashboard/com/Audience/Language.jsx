@@ -50,7 +50,10 @@ const Language = () => {
   // Data preparation for HorBarChart
   const categories = languagesData.map((item) => item.name);
   const seriesData = [
-    { name: "User Count", data: languagesData.map((item) => item.UserCount) },
+    {
+      name: "Nombre d'utilisateurs",
+      data: languagesData.map((item) => item.UserCount),
+    },
   ];
   return (
     <div className="w-fit m-10">
@@ -59,7 +62,7 @@ const Language = () => {
           categories={categories}
           series={seriesData}
           width={500}
-          title={"Users per Language"}
+          title={"Nombre d'utilisateurs par langue"}
         />
       )}
     </div>

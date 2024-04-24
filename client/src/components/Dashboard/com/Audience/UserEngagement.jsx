@@ -102,14 +102,14 @@ const UserEngagement = () => {
   const categories = formattedDataUser.map((item) => item.name);
   const seriesData = [
     {
-      name: "User Count",
+      name: "Nombre d'utilisateurss",
       data: formattedDataUser.map((item) => item.Count),
     },
   ];
 
   const seriesb = [
     {
-      name: "User Count",
+      name: "Nombre d'utilisateurs",
       data: userLoyaltyData.map((item) => item.value),
     },
   ];
@@ -121,7 +121,7 @@ const UserEngagement = () => {
         <div className="pt-4">
           <div className="  bg-white pt-2  rounded-md border border-gray-300 w-fit mx-auto pr-3 ">
             <div className="flex justify-between">
-              <h1 className="text-gray-700 font-semibold ml-4">Users</h1>
+              <h1 className="text-gray-700 font-semibold ml-4">Utilisateurs</h1>
               <h1 className="text-gray-700 font-semibold ml-4">{TotalUser}</h1>
               <Periode
                 selectedPeriod={selectedPeriod}
@@ -139,23 +139,25 @@ const UserEngagement = () => {
           <div className="flex gap-4  justify-center mt-4 ">
             <div className="  bg-white pt-2  rounded-md border border-gray-300 w-fit ">
               <h1 className="text-gray-700 font-semibold ml-4">
-                Users Loyalty
+                Fidélité des utilisateurs
               </h1>
               <BarChart
                 series={seriesb}
                 categories={labelsb}
+                width={525}
+                height={180}
               />
             </div>
 
             <div className="  ">
               <div className="mb-4">
                 <Card
-                  content={"New Users"}
+                  content={"Nouveaux utilisateurs"}
                   count={newUser}
                 />
               </div>
               <Card
-                content={"Returning Users"}
+                content={"Utilisateurs récurrents"}
                 count={returning}
               />
             </div>

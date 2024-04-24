@@ -1,7 +1,7 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
-const DoughnutChart = ({ series, labels }) => {
+const DoughnutChart = ({ series, labels, width, height }) => {
   const options = {
     chart: {
       type: "donut",
@@ -29,6 +29,8 @@ const DoughnutChart = ({ series, labels }) => {
           options={options}
           series={series}
           type="donut"
+          width={width}
+          height={height}
         />
       </div>
       <div id="html-dist"></div>

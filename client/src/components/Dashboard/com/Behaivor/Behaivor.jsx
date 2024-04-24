@@ -7,7 +7,7 @@ const Behaivor = () => {
     { name: "Pages", path: "/dashboard/behaivor/pages" },
     { name: "Session", path: "/dashboard/behaivor/session" },
     { name: "Interactions", path: "/dashboard/behaivor/interactions" },
-    { name: "Journeys", path: "/dashboard/behaivor/journeys" },
+    { name: "Parcours ", path: "/dashboard/behaivor/journeys" },
     { name: "Acquisition", path: "/dashboard/behaivor/acquisition" },
   ];
   return (

@@ -30,18 +30,9 @@ function NavBar() {
               : "text-gray-500  hover:text-brand transition duration-300"
           }
         >
-          Home
+          Accueil
         </NavLink>
-        <NavLink
-          to="/Features"
-          className={({ isActive }) =>
-            isActive
-              ? "text-brand transition duration-300  "
-              : "text-gray-500 hover:text-brand transition duration-300"
-          }
-        >
-          Features
-        </NavLink>
+
         <NavLink
           to="/Howitworks?"
           className={({ isActive }) =>
@@ -50,7 +41,7 @@ function NavBar() {
               : "text-gray-500  hover:text-brand transition duration-300"
           }
         >
-          How it works?
+          Comment cela fonctionne-t-il ?
         </NavLink>
         <NavLink
           to="/Pricing"
@@ -59,9 +50,7 @@ function NavBar() {
               ? "text-brand"
               : "text-gray-500  hover:text-brand transition duration-300"
           }
-        >
-          Pricing
-        </NavLink>
+        ></NavLink>
         <NavLink
           to="/About"
           className={({ isActive }) =>
@@ -70,25 +59,25 @@ function NavBar() {
               : "text-gray-500  hover:text-brand transition duration-300"
           }
         >
-          About Us
+          À propos de nous
         </NavLink>
       </div>
       {user ? (
         <Link to="/dashboard/overview">
           <button className="text-white mr-2 bg-brand px-5 py-1.5 rounded-md text-base font-semibold  ">
-            Dashboard
+            Tableau de bord
           </button>
         </Link>
       ) : (
         <div>
           <Link to="/sign-up">
             <button className="text-white mr-2 bg-brand px-5 py-1.5 rounded-md text-base font-semibold  ">
-              Sign Up
+              S'inscrire
             </button>
           </Link>
           <Link to="/sign-in">
             <button className="text-gray-800  bg-white border border-gray-300 px-5 py-1.5 rounded-md text-base font-semibold  ">
-              Sign In
+              Se connecter
             </button>
           </Link>
         </div>
