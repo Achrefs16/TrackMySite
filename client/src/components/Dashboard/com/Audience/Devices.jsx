@@ -64,7 +64,7 @@ const Devices = () => {
     };
 
     getData();
-  }, [token]);
+  }, [token, selectedWebsite]);
 
   // Example of using one of the chart data arrays
   const series = osChartData.map((item) => item.value);

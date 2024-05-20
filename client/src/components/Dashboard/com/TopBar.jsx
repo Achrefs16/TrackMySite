@@ -3,18 +3,24 @@ import NotificationModal from "./NotificationModal";
 import { Link } from "react-router-dom";
 import img from "../../landing/img/logog.png";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { logout } from "../../../store/userSlice";
 import SelectModal from "./SelectModal";
 import { IoIosArrowDown } from "react-icons/io";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IoNotificationsOutline } from "react-icons/io5";
 import ModalProfile from "./ModalProfile";
+import {
+  setSelectedWebsite,
+  clearSelectedWebsite,
+  clearWebsitedata,
+  setWebsitedata,
+} from "../../../store/websiteSlice";
 
 const TopBar = () => {
   const token = useSelector((state) => state.user.token);
   const [websites, setWebsites] = useState();
   const selectedWebsite = useSelector((state) => state.website.selectedWebsite);
-
+  const dispatch = useDispatch();
   const handleCloseModal = () => setIsOpen(false);
   const [isOpen, setIsOpen] = useState(false);
   const userDetails = useSelector((state) => state.user.details);
@@ -42,6 +48,35 @@ const TopBar = () => {
       );
       // Refresh notifications to reflect the new status
       getData();
+    }
+  };
+  const handleWebsite = (TotalUser) => {
+    dispatch(setWebsitedata(TotalUser));
+  };
+  const getWebsitesdata = async () => {
+    if (token) {
+      try {
+        const TotalUsers = await axios.get(
+          `/totalvisitor/year?appId=${selectedWebsite.appId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        handleWebsite(TotalUsers.data.totalVisitors.TotalCount);
+      } catch (error) {
+        if (
+          error.response &&
+          (error.response.status === 401 || error.response.status === 403)
+        ) {
+          console.error("Unauthorized or Forbidden response, logging out.");
+          dispatch(logout());
+        }
+      }
+    } else {
+      dispatch(logout());
     }
   };
 
@@ -81,13 +116,19 @@ const TopBar = () => {
   };
   useEffect(() => {
     getWebsites();
-    getData();
+    if (selectedWebsite) {
+      getData();
+    }
+
     const interval = setInterval(() => {
       getData();
     }, 30000); // 30000 milliseconds = 30 seconds
 
     // Clean up the interval when the component unmounts
     return () => clearInterval(interval);
+  }, [selectedWebsite]);
+  useEffect(() => {
+    getWebsitesdata();
   }, [selectedWebsite]);
 
   const letter = userDetails.name.charAt(0);
@@ -122,6 +163,7 @@ const TopBar = () => {
           onClose={handleCloseModal}
           websites={websites}
           getWebsites={getWebsites}
+          getWebsitesdata={getWebsitesdata}
         />
       </div>
       <div className="flex items-center gap-6 ">

@@ -93,7 +93,9 @@ const Interaction = () => {
 
   // Ensure selectedWebsite is also included in dependencies if it's used inside getData function.
   eventData && console.log(eventData);
-  const categories = eventData.map((item) => item.event);
+  const categories = eventData
+    .filter((item) => item.event !== null) // Filter out null values
+    .map((item) => item.event);
 
   const series = [
     {
@@ -110,6 +112,7 @@ const Interaction = () => {
       data: event.map((item) => item.AvgEvents),
     },
   ];
+  console.log(categories);
   return (
     <div>
       <div className="flex gap-4">

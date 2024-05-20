@@ -5,8 +5,16 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setSelectedWebsite,
   clearSelectedWebsite,
+  setWebsitedata,
 } from "../../../store/websiteSlice";
-const SelectModal = ({ isOpen, onClose, websites, getWebsites }) => {
+
+const SelectModal = ({
+  isOpen,
+  onClose,
+  websites,
+  getWebsites,
+  getWebsitesdata,
+}) => {
   const [isAddOpen, setIsAddOpen] = useState(false);
 
   const handleCloseModal = () => setIsAddOpen(false);
@@ -14,10 +22,14 @@ const SelectModal = ({ isOpen, onClose, websites, getWebsites }) => {
   const selectedWebsite = useSelector((state) => state.website.selectedWebsite);
   const handleSelectWebsite = (website) => {
     dispatch(setSelectedWebsite(website));
+
+    onClose();
+  };
+  const close = () => {
     onClose();
   };
   if (!isOpen) return null;
-  console.log(selectedWebsite);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -77,12 +89,13 @@ const SelectModal = ({ isOpen, onClose, websites, getWebsites }) => {
               setIsAddOpen(true);
             }}
           >
-            Add Website
+            Ajouter un site web
           </motion.button>
           <AddwsModal
             isOpen={isAddOpen}
             onClose={handleCloseModal}
             getWebsites={getWebsites}
+            close={close}
           />
         </div>
       </motion.div>

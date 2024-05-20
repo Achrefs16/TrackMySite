@@ -7,6 +7,7 @@ const {
   combineAddToCartViews,
   combineProductViews,
   combineProductViewsByCategory,
+  fetchdateProduct,
 } = require("../helpers/commerce");
 
 exports.getCombinedProductViews = async (req, res) => {
@@ -144,5 +145,21 @@ exports.getDailySalesByCategory = async (req, res) => {
     res
       .status(500)
       .json({ error: "Error fetching daily sales by category data" });
+  }
+};
+
+exports.getdateByProduct = async (req, res) => {
+  const { appId } = req.query;
+
+  if (!appId) {
+    return res.status(400).json({ error: "appId is required" });
+  }
+
+  try {
+    const salesByProduct = await fetchdateProduct(appId);
+    res.json({ SalesByProduct: salesByProduct });
+  } catch (error) {
+    console.error("Error in getSalesByProduct:", error);
+    res.status(500).json({ error: "Error fetching sales by product data" });
   }
 };

@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 const pool = require("./db/database");
 const cron = require("node-cron");
-const { Server } = require("socket.io");
+
 const collectorRoutes = require("./routes/collectorRoutes");
 const overviewAnalyticsRoutes = require("./routes/overviewAnalyticsRoutes");
 const segmentRoures = require("./routes/segmentRoures");
@@ -139,13 +139,15 @@ FROM (
 }
 
 function generateVisitorNotification(visitors) {
-  return `👥 Visitors last 24 h: ${visitors}. Keep up the great work engaging your audience!`;
+  return `👥 Visiteurs au cours des dernières 24 heures : ${visitors}. Continuez à faire du bon travail en attirant l'attention de votre public !`;
 }
 function generateEngagementNotification(engagement) {
   const engagementNumber = Number(engagement);
   // Assuming engagement is measured in minutes
-  return `⏳ Average engagement last 24 h: ${engagementNumber.toFixed(2)} 
-  minutes. Your content is captivating!`;
+  return `⏳ Engagement moyen au cours des dernières 24 heures : ${engagementNumber.toFixed(
+    2
+  )} 
+  minutes. Votre contenu est captivant !`;
 }
 
 async function getAppIds() {

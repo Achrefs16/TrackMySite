@@ -3,53 +3,59 @@ import React, { useState } from "react";
 const AdvancedTracking = () => {
   // Data for each tracking function
   const functionData = {
-    Overview: {
+    "Page visite": {
       description:
-        "These tracking methods help website owners understand user behavior: visibility tracking monitors appearances, click tracking observes clicks, form submission tracking notes form completions, and file download tracking records downloads.",
+        "L'événement Page visite enregistre chaque fois qu'un utilisateur accède à une page spécifique sur le site web.",
+      dataCaptured: "URL de page, nom de page, et horodatage de l'evenement.",
+      example: '  handlePageView("home");',
     },
-    "Visibility Tracking": {
+    "Suivi de visibilité": {
       description:
-        "Monitors when specified elements become visible, aiding content and ad performance analysis.",
-      dataCaptured: "Element ID or tag, and visibility timestamp.",
+        "Contrôle le moment où les éléments spécifiés deviennent visibles, ce qui facilite l'analyse du contenu et des performances publicitaires.",
+      dataCaptured:
+        "Identifiant d'élément ou balise, et horodatage de visibilité.",
       example: '<div tms="visibility">Visible Content</div>',
     },
-    "Click Tracking": {
+    "Suivi des clics": {
       description:
-        "Analyzes user interactions through clicks on designated elements.",
+        "Analyse des interactions utilisateur à travers les clics sur des éléments désignés.",
       dataCaptured:
-        "Element's ID, tag, text content, href attribute, and click timestamp.",
+        "Identifiant de l'élément, balise, contenu textuel, attribut href et horodatage du clic.",
       example: '<button tms="click">Click Me</button>',
     },
-    "Form Submission Tracking": {
+    "Suivi des soumissions de formulaire": {
       description:
-        "Tracks user interactions with forms to capture engagement and conversion data.",
+        "Suit les interactions des utilisateurs avec les formulaires pour capturer les données d'engagement et de conversion.",
       dataCaptured:
-        "Form ID, name, destination, submit text, and submission timestamp.",
+        "Identifiant du formulaire, nom, destination, texte de soumission et horodatage de la soumission.",
       example: '<form tms="form">Form Fields</form>',
     },
-    "File Download Tracking": {
+    "Suivi des téléchargements de fichiers": {
       description:
-        "Provides insights into user interest by tracking file download events.",
-      dataCaptured: "Link URL, file name, extension, and download timestamp.",
+        "Fournit des informations sur l'intérêt des utilisateurs en suivant les événements de téléchargement de fichiers.",
+      dataCaptured:
+        "URL du lien, nom du fichier, extension et horodatage du téléchargement.",
       example: '<a href="URL" tms="download">Download File</a>',
     },
-    "Video Play Tracking": {
+    "Suivi de la lecture des vidéos": {
       description:
-        "Monitors engagement with video content by tracking play events.",
+        "Surveille l'engagement avec le contenu vidéo en suivant les événements de lecture.",
       dataCaptured:
-        "Video ID, source URL, title or alt text, duration, and play timestamp.",
+        "Identifiant de la vidéo, URL de la source, titre ou texte alternatif, durée et horodatage de la lecture.",
       example: '<video tms="video"></video>',
     },
-    "Query Search Tracking": {
+    "Suivi des recherches de requêtes": {
       description:
-        "Tracks search query input to understand user search behavior and intent.",
-      dataCaptured: "Input field ID, tag name, and query text.",
+        "Suit les entrées de requêtes de recherche pour comprendre le comportement de recherche et l'intention des utilisateurs.",
+      dataCaptured:
+        "Identifiant du champ de saisie, nom de la balise et texte de la requête.",
       example: '<input type="search" tms="query-search" />',
     },
-    "Clipboard Copy Tracking": {
+    "Suivi de la copie": {
       description:
-        "Tracks text copied by the user from elements marked with tms='clipboard-copy'.",
-      dataCaptured: "Element ID, tag name, and the copied text content.",
+        "Suit le texte copié par l'utilisateur à partir d'éléments marqués avec tms='clipboard-copy'.'.",
+      dataCaptured:
+        "Identifiant de l'élément, nom de la balise et contenu du texte copié.",
       example: '<div tms="clipboard-copy">Copyable Content</div>',
     },
   };
@@ -57,12 +63,12 @@ const AdvancedTracking = () => {
   const handleNavigation = (functionName) => {
     setSelectedFunction(functionName);
   };
-  const [selectedFunction, setSelectedFunction] = useState("Overview");
+  const [selectedFunction, setSelectedFunction] = useState("Page visite");
   return (
     <div className="w-full mx-auto  ">
       <div className="flex gap-20 items-center">
         <nav className="w-64 p-4  border-r border-gray-300 ">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Functions</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Événements</h2>
           <ul className=" w-fit ">
             {Object.keys(functionData).map((functionName) => (
               <li key={functionName}>
@@ -91,10 +97,10 @@ const AdvancedTracking = () => {
             </p>
             {selectedFunction === "Overview" ? null : (
               <div className="text-lg text-gray-600">
-                <span className="font-semibold">Data Captured:</span>{" "}
+                <span className="font-semibold">Données capturées :</span>{" "}
                 {functionData[selectedFunction].dataCaptured}
                 <p className="text-2xl font-semibold text-gray-700 my-4">
-                  How to use it:
+                  Comment l'utiliser :
                 </p>
                 <div className=" bg-slate-800 p-6 rounded border border-gray-300 mt-4">
                   <code className="text-base font-medium text-green-500 break-words">

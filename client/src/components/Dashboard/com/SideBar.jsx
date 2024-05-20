@@ -54,19 +54,7 @@ const SideBar = () => {
         <Tooltip id="Visitors" />
         <FaUsers className="mb-2 px-1.5 pt-1.5 w-full h-full" />
       </NavLink>
-      <NavLink
-        data-tooltip-id="Conversion"
-        data-tooltip-content="Revenu"
-        to="/dashboard/conversion/purchase"
-        className={({ isActive }) =>
-          isActive
-            ? "bg-brand text-white mx-auto rounded transition duration-300 w-8 h-8 mb-4 flex justify-center items-center"
-            : "text-gray-500 hover:bg-gray-300 hover:text-gray-600 transition duration-300 w-8 h-8 mb-4 mx-auto rounded flex justify-center items-center"
-        }
-      >
-        <Tooltip id="Coversion" />
-        <IoBagCheckSharp className="mb-2 px-1.5 pt-1.5 w-full h-full" />
-      </NavLink>
+
       <NavLink
         data-tooltip-id="Events"
         data-tooltip-content="Comportement"
@@ -79,6 +67,19 @@ const SideBar = () => {
       >
         <Tooltip id="Events" />
         <PiCursorClickFill className="mb-2 px-1.5 pt-1.5 w-full h-full" />
+      </NavLink>
+      <NavLink
+        data-tooltip-id="Conversion"
+        data-tooltip-content="Revenu"
+        to="/dashboard/conversion/purchase"
+        className={({ isActive }) =>
+          isActive
+            ? "bg-brand text-white mx-auto rounded transition duration-300 w-8 h-8 mb-4 flex justify-center items-center"
+            : "text-gray-500 hover:bg-gray-300 hover:text-gray-600 transition duration-300 w-8 h-8 mb-4 mx-auto rounded flex justify-center items-center"
+        }
+      >
+        <Tooltip id="Coversion" />
+        <IoBagCheckSharp className="mb-2 px-1.5 pt-1.5 w-full h-full" />
       </NavLink>
       <div className="border-t w-8 mx-auto my-8 border-gray-300"></div>
       <NavLink

@@ -2,14 +2,28 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
-const AddwsModal = ({ isOpen, onClose, getWebsites }) => {
+const AddwsModal = ({ isOpen, onClose, getWebsites, close }) => {
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
   const [category, setCategory] = useState("");
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
   const [websiteId, setWebsiteId] = useState("");
   const token = useSelector((state) => state.user.token);
+
+  const categories = [
+    "Blog",
+    "E-commerce",
+    "Portfolio",
+    "Corporate",
+    "Réseaux sociaux",
+    "Gouvernement",
+    "Voyages",
+    "Emploi",
+    "Other",
+  ];
+
   if (!isOpen) return null;
 
   const handleSubmit = async (e) => {
@@ -27,8 +41,6 @@ const AddwsModal = ({ isOpen, onClose, getWebsites }) => {
           }
         );
 
-        // Assuming the server responds with the website ID
-
         setWebsiteId(response.data.appId);
         setSubmissionSuccess(true);
         getWebsites();
@@ -43,18 +55,21 @@ const AddwsModal = ({ isOpen, onClose, getWebsites }) => {
       console.error("No token found, please login.");
     }
   };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full">
       <motion.div
         initial={{ x: 500 }}
         whileInView={{ x: 0 }}
         transition={{ duration: 0.3 }}
-        className="relative float-right   p-5 border w-2/4 h-full shadow-lg  bg-white"
+        className="relative float-right p-5 border w-2/4 h-full shadow-lg bg-white"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center">
           <h4 className="text-lg font-medium text-gray-900">
-            {submissionSuccess ? "Website Added" : "Add Your Website"}
+            {submissionSuccess
+              ? "Site web ajouté avec succès"
+              : "Ajouter votre site web"}
           </h4>
           <button
             className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
@@ -86,7 +101,7 @@ const AddwsModal = ({ isOpen, onClose, getWebsites }) => {
                   htmlFor="name"
                   className="block text-sm font-medium leading-6 text-gray-500"
                 >
-                  Website Name
+                  Nom du site web
                 </label>
                 <div className="mt-2">
                   <input
@@ -107,7 +122,7 @@ const AddwsModal = ({ isOpen, onClose, getWebsites }) => {
                   htmlFor="url"
                   className="block text-sm font-medium leading-6 text-gray-500"
                 >
-                  Website URL
+                  URL du site web
                 </label>
                 <div className="mt-2">
                   <input
@@ -128,19 +143,27 @@ const AddwsModal = ({ isOpen, onClose, getWebsites }) => {
                   htmlFor="category"
                   className="block text-sm font-medium leading-6 text-gray-500"
                 >
-                  Category
+                  Catégorie de site web
                 </label>
                 <div className="mt-2">
-                  <input
+                  <select
                     id="category"
                     name="category"
-                    type="text"
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
                     required
                     className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-brand sm:text-sm sm:leading-6"
-                    placeholder="Enter website category"
-                  />
+                  >
+                    <option value="">Select category</option>
+                    {categories.map((category) => (
+                      <option
+                        key={category}
+                        value={category}
+                      >
+                        {category}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
@@ -149,18 +172,38 @@ const AddwsModal = ({ isOpen, onClose, getWebsites }) => {
                   type="submit"
                   className="text-white bg-brand px-5 py-2 rounded-md text-lg font-semibold shadow-xl focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand"
                 >
-                  Save Website
+                  Sauvegarder les informations
                 </button>
               </div>
             </form>
           ) : (
             <div className="p-10">
               <p className="text-lg font-medium text-gray-900">
-                Website successfully added!
+                Site Web ajouté avec succès !
               </p>
               <p>
-                Your website ID: <span className="font-bold">{websiteId}</span>
+                L'identifiant de votre site web :{" "}
+                <span className="font-bold">{websiteId}</span>
               </p>
+
+              <Link
+                to={"/dashboard/documentation/installation"}
+                onClick={close}
+              >
+                <button
+                  onClick={() => {
+                    // Reset the form and close modal or allow for another action
+                    setSubmissionSuccess(false);
+                    setName("");
+                    setUrl("");
+                    setCategory("");
+                    onClose();
+                  }}
+                  className="mt-4 text-white bg-brand px-5 py-2 rounded-md text-lg font-semibold shadow-xl focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand"
+                >
+                  Acceder Au Guide D'installation
+                </button>
+              </Link>
               <button
                 onClick={() => {
                   // Reset the form and close modal or allow for another action
@@ -172,7 +215,7 @@ const AddwsModal = ({ isOpen, onClose, getWebsites }) => {
                 }}
                 className="mt-4 text-white bg-brand px-5 py-2 rounded-md text-lg font-semibold shadow-xl focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand"
               >
-                Close
+                Fermer
               </button>
             </div>
           )}

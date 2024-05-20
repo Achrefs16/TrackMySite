@@ -1,21 +1,22 @@
 import React, { useState } from "react";
 import CodeSnippet from "./CodeSnippet";
+import { useDispatch, useSelector } from "react-redux";
 import AdvancedTracking from "./AdvancedTracking";
 const Instructions = () => {
   const ReactCode = `useEffect(() => {
     initializeTMS("af9e0014885");
   }, []);`;
   const [activeTab, setActiveTab] = useState("React.js");
-
+  const selectedWebsite = useSelector((state) => state.website.selectedWebsite);
   const instructions = {
     "React.js": {
-      text: "To integrate the TrackMySite tag in your React app, copy the initialization code provided below and insert it within the useEffect hook at the top of your App.js component.",
+      text: "Pour intégrer la balise TrackMySite dans votre application React, copiez le code d'initialisation fourni ci-dessous et insérez-le dans le hook useEffect en haut de votre composant App.js.",
       code: `
 import { initializeTMS } from 'TrackMySite.js';
 
 function App() {
-  React.useEffect(() => {
-    initializeTMS('yourAppId');
+ useEffect(() => {
+    initializeTMS('${selectedWebsite.appId}');
   }, []);
 
   return (
@@ -26,7 +27,7 @@ function App() {
 }`,
     },
     Angular: {
-      text: "For Angular, include the TrackMySite tag initialization in your main module or component, using the ngOnInit lifecycle hook.",
+      text: "Pour Angular, incluez l'initialisation de la balise TrackMySite dans votre module ou composant principal, en utilisant le crochet de cycle de vie ngOnInit.",
       code: `
 import { Component, OnInit } from '@angular/core';
 import { initializeTMS } from 'TrackMySite.js';
@@ -38,28 +39,28 @@ import { initializeTMS } from 'TrackMySite.js';
 })
 export class AppComponent implements OnInit {
   ngOnInit() {
-    initializeTMS('yourAppId');
+    initializeTMS('${selectedWebsite.appId}');
   }
 }`,
     },
     "Vanilla JS": {
-      text: "In a Vanilla JS application, add the TrackMySite tag directly within the <script> tag at the bottom of the <body> section of your index.html file.",
+      text: "Dans une application Vanilla JS, ajoutez la balise TrackMySite directement dans la balise <script> au bas de la section <body> de votre fichier index.html.",
       code: `
 <script src="path/to/TrackMySite.js"></script>
 <script>
-  initializeTMS('yourAppId');
+  initializeTMS('${selectedWebsite.appId}');
 </script>
 `,
     },
     "Vue.js": {
-      text: "To integrate TrackMySite in a Vue.js application, import and initialize TrackMySite in your main.js file, before creating the Vue instance.",
+      text: "Pour intégrer TrackMySite dans une application Vue.js, importez et initialisez TrackMySite dans votre fichier main.js, avant de créer l'instance Vue.",
       code: `
 import Vue from 'vue';
 import App from './App.vue';
 import { initializeTMS } from 'TrackMySite.js';
 
 // Initialize TrackMySite with your App ID
-initializeTMS('yourAppId');
+initializeTMS('${selectedWebsite.appId}');
 
 new Vue({
   render: h => h(App),

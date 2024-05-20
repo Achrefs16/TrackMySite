@@ -12,8 +12,8 @@ const Demographic = () => {
   const selectedWebsite = useSelector(
     (state) => state.website.selectedWebsite.appId
   );
-  console.log(selectedWebsite);
-
+  console.log(userCountsByCountry);
+  console.log(userCountsByCity);
   useEffect(() => {
     const getData = async () => {
       if (token) {
@@ -66,7 +66,7 @@ const Demographic = () => {
     };
 
     getData();
-  }, [token, dispatch]);
+  }, [token, dispatch, selectedWebsite]);
   const seriesC = [
     {
       name: "Country",
@@ -76,11 +76,11 @@ const Demographic = () => {
   const labelsC = userCountsByCountry.map((item) => item.country);
   const seriesy = [
     {
-      name: "Country",
-      data: userCountsByCountry.map((item) => item.userCount),
+      name: "Ville",
+      data: userCountsByCity.map((item) => item.userCount),
     },
   ];
-  const labelsy = userCountsByCountry.map((item) => item.country);
+  const labelsy = userCountsByCity.map((item) => item.city);
   console.log(seriesy);
   return (
     <div className="pt-4">
@@ -97,7 +97,7 @@ const Demographic = () => {
         </div>
         <div className="w-1/2 ">
           <h2 className="text-xl font-medium my-8">
-            Nom d'utilisateur par ville
+            Nombre d'utilisateur par ville
           </h2>
           <HorBarChart
             categories={labelsy}

@@ -26,7 +26,6 @@ const Step = () => {
       <motion.div className="  w-full  bg-gray-50">
         <motion.div className="flex gap-16 ml-40  items-center  mt-28 ">
           <motion.img
-            initial={{ opacity: 0, x: -80 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
             src={img1}
@@ -36,12 +35,12 @@ const Step = () => {
           <h1 className="font-extrabold text-9xl text-brand  text-center">1</h1>
           <div className="">
             <p className="text-slate-800 font-bold  text-3xl">
-              Effortless <span className="text-brand">Integration</span>
+              Une intégration <span className="text-brand">sans effort</span>
             </p>
             <p className="text-slate-500 text-xl pt-2 mb-4 ">
-              A simple, swift solution, Quickly enhance your website with our
-              easy-to-integrate, lightweight tracking code. No slowdown, just
-              insights.
+              Une solution simple et rapide, pour améliorer rapidement votre
+              site web grâce à notre code de suivi léger et facile à intégrer.
+              Code de suivi léger et facile à intégrer. Pas de ralentissement.
             </p>
             <a
               href="#step2"
@@ -51,13 +50,13 @@ const Step = () => {
               }}
               className=" text-brand font-normal mt-4 inline "
             >
-              Next Step <IoIosArrowForward className="inline text-lg" />
+              Étape Suivante <IoIosArrowForward className="inline text-lg" />
             </a>
             <Link
               to="/sign-up"
               className="ml-8 text-brand font-normal mt-4 inline "
             >
-              Get Started <IoIosArrowForward className="inline text-lg" />
+              Commencer <IoIosArrowForward className="inline text-lg" />
             </Link>
           </div>
         </motion.div>
@@ -68,11 +67,13 @@ const Step = () => {
         >
           <div className="w-2/5">
             <p className="text-slate-800 font-bold text-3xl">
-              Collect <span className="text-sunny">Real-Time</span> Data
+              Collecter <span className="text-sunny">des données </span> en
+              temps réel
             </p>
             <p className="text-slate-500 pl-2 text-xl pt-2 mb-4  ">
-              Start collecting valuable data immediately. Track user
-              interactions, engagement, and more with zero lag.
+              Commencez immédiatement à collecter des données précieuses. Suivez
+              les interactions de l'utilisateur, de l'engagement et plus encore,
+              sans aucun décalage.
             </p>
             <a
               href="#step3"
@@ -82,20 +83,19 @@ const Step = () => {
                 scrollTo("step3");
               }}
             >
-              Next Step <IoIosArrowForward className="inline text-lg" />
+              Étape suivante <IoIosArrowForward className="inline text-lg" />
             </a>
             <Link
               to="/sign-up"
               className="ml-8 text-sunny font-medium mt-4 inline "
             >
-              Get Started <IoIosArrowForward className="inline text-lg" />
+              Commencer <IoIosArrowForward className="inline text-lg" />
             </Link>
           </div>
           <h1 className="font-extrabold text-9xl text-sunny">2</h1>
           <motion.img
             src={img2}
             alt=""
-            initial={{ opacity: 0, x: 80 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
             className="w-48"
@@ -110,7 +110,6 @@ const Step = () => {
           <motion.img
             src={img3}
             alt=""
-            initial={{ opacity: 0, x: -80 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
             className="w-48"
@@ -118,17 +117,18 @@ const Step = () => {
           <h1 className="font-bold text-9xl text-alert">3</h1>
           <div className="w-2/4">
             <p className="text-slate-800 font-bold text-3xl   ">
-              Analyze and <span className="text-alert">Act</span>
+              Analyser et <span className="text-alert">agir</span>
             </p>{" "}
             <p className="text-slate-500 pt-2  text-xl mb-4 ">
-              Use our intuitive dashboard to analyze your data and make informed
-              decisions to boost your site’s performance.
+              Utilisez notre tableau de bord intuitif pour analyser vos données
+              et prendre des décisions éclairées pour améliorer la performance
+              de votre site. pour améliorer les performances de votre site.
             </p>
             <Link
               to="/sign-up"
               className=" text-alert  mt-4 inline "
             >
-              Get Started <IoIosArrowForward className="inline text-lg" />
+              Commencer <IoIosArrowForward className="inline text-lg" />
             </Link>
           </div>
         </motion.div>

@@ -6,11 +6,11 @@ const Docs = () => {
   const Links = [
     { name: "Installation", path: "/dashboard/documentation/installation" },
     {
-      name: "Fonctions de suivi avancée",
+      name: "Interaction et événements",
       path: "/dashboard/documentation/tracking",
     },
     {
-      name: "Interaction et événements",
+      name: "Fonctions de suivi avancée",
       path: "/dashboard/documentation/events",
     },
   ];

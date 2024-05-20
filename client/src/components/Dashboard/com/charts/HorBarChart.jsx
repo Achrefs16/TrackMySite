@@ -2,6 +2,12 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 
 const HorBarChart = ({ series, categories, width, height, title }) => {
+  const integer = series.map((dataObj) => ({
+    ...dataObj,
+    data: dataObj.data.map((dataPoint) => Math.round(dataPoint)),
+  }));
+  console.log(series);
+  console.log(integer);
   const chartHeight = height;
   const options = {
     chart: {
@@ -26,6 +32,18 @@ const HorBarChart = ({ series, categories, width, height, title }) => {
         type: "horizontal",
       },
     },
+    tooltip: {
+      enabled: true,
+      formatter: function (val) {
+        return parseInt(val); // Format tooltip to display integers
+      },
+    },
+    labels: {
+      show: false,
+      formatter: function (val) {
+        return parseInt(val);
+      },
+    },
   };
 
   return (
@@ -34,7 +52,7 @@ const HorBarChart = ({ series, categories, width, height, title }) => {
         <h1>{title}</h1>
         <ReactApexChart
           options={options}
-          series={series}
+          series={integer}
           type="bar"
           height={chartHeight}
           width={width}

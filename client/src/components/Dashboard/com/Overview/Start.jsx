@@ -1,35 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../../../store/userSlice";
 import Card from "../Card";
 import axios from "axios";
 import Periode from "./Periode";
 import AreaChart from "../charts/AreaChart";
+import Bar from "../Bar";
 
 const Start = () => {
-  const userDetails = useSelector((state) => state.user.details);
   const selectedWebsite = useSelector(
     (state) => state.website.selectedWebsite.appId
   );
-  const [isOpen, setIsOpen] = useState(false);
+
   const [conversion, setConversion] = useState("");
+
   const [data, setData] = useState({
     users: null,
     sessions: null,
     events: null,
   });
   const [render, setRender] = useState(false);
-  const [selectedPeriod, setSelectedPeriod] = useState("year");
+  const [selectedPeriod, setSelectedPeriod] = useState("month");
 
   const handleChange = async (event) => {
     setSelectedPeriod(event.target.value);
   };
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const token = useSelector((state) => state.user.token);
   useEffect(() => {
@@ -37,7 +35,7 @@ const Start = () => {
       ["users", "sessions", "events"].forEach((entity) => getData(entity));
       getConversion();
     }
-  }, [selectedPeriod, token]);
+  }, [selectedPeriod, token, selectedWebsite]);
 
   const getData = async (entity) => {
     if (token) {
@@ -56,7 +54,6 @@ const Start = () => {
           ...prevData,
           [entity]: response.data,
         }));
-        setRender(true);
       } catch (error) {
         if (
           error.response &&
@@ -74,15 +71,15 @@ const Start = () => {
     if (token) {
       try {
         const response = await axios.get(
-          `/conversion?appId=${selectedWebsite}`,
+          `/conversion/${selectedPeriod}?appId=${selectedWebsite}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
-        console.log(response.data);
-        setConversion(response.data.Conversion.TotalRevenue);
+
+        setConversion(response.data.TotalRevenue);
         setRender(true);
       } catch (error) {
         if (
@@ -117,80 +114,98 @@ const Start = () => {
   const categories = formattedDataEvent.map((item) => item.name);
   const seriesData = [
     {
-      name: "User Count",
+      name: "Evénements",
       data: formattedDataEvent.map((item) => item.Count),
     },
   ];
   const categoriesU = formattedDataUser.map((item) => item.name);
   const seriesDataU = [
     {
-      name: "User Count",
+      name: "Utilisateurs",
       data: formattedDataUser.map((item) => item.Count),
     },
     {
-      name: "User Count",
+      name: "Sessions",
       data: formattedDataSession.map((item) => item.Count),
     },
   ];
+
+  const Links = [{ name: "Aperçu général", path: "/dashboard/overview" }];
+
+  const Websitedata = useSelector((state) => state.website.Websitedata);
   return (
     <>
-      <div className="bg-gray-100   h-5/6">
-        <div className="  flex justify-between px-10 pt-4">
-          <h1 className=" text-xl text-slate-800 font-bold">Aperçu général</h1>
-          <Periode
-            selectedPeriod={selectedPeriod}
-            handleChange={handleChange}
-          />
+      <Bar Links={Links} />
+      {Websitedata === 0 ? (
+        <div className="bg-gray-100   h-5/6 flex justify-center pt-40">
+          <p className="w-3/4 text-4xl font-bold text-gray-600">
+            Intégrez le code de suivi pour visualiser les données d'analyse de
+            votre site web.
+          </p>
         </div>
-        {render ? (
-          <div className=" flex gap-5 w-full justify-center mx-auto ">
-            <div className="  bg-white pt-2  rounded-md border border-gray-300 w-fit pr-3 ">
-              <h1 className="text-gray-700 font-semibold ml-4 ">
-                utilisateurs et sessions
-              </h1>
-              <AreaChart
-                series={seriesDataU}
-                categories={categoriesU}
-                width={564}
-                height={200}
-              />
-            </div>
-            <div className="  bg-white pt-2  rounded-md border border-gray-300 w-fit pr-3 ">
-              <h1 className="text-gray-700 font-semibold ml-4">Evénements</h1>
-              <AreaChart
-                series={seriesData}
-                categories={categories}
-                width={564}
-                height={200}
-              />
-            </div>
+      ) : (
+        <div className="bg-gray-100   h-5/6">
+          <div className="  flex justify-between px-10 pt-4">
+            <h1 className=" text-xl text-slate-800 font-bold">
+              Aperçu général
+            </h1>
+            <Periode
+              selectedPeriod={selectedPeriod}
+              handleChange={handleChange}
+            />
           </div>
-        ) : (
-          <div>Chargement</div>
-        )}
-        {data.events && (
-          <div className="flex mt-5 w-full justify-center mx-auto gap-5">
-            <Card
-              content={"Nombre d'utilisateurs"}
-              count={data.users.TotalCount}
-            />
-            <Card
-              content={"Nombre des sessions"}
-              count={data.sessions.TotalCount}
-            />
-            <Card
-              content={"Total des évènements"}
-              count={data.events.TotalCount}
-            />
-            {conversion && (
+          {render ? (
+            <div className=" flex gap-5 w-full justify-center mx-auto ">
+              <div className="  bg-white pt-2  rounded-md border border-gray-300 w-fit pr-3 ">
+                <h1 className="text-gray-700 font-semibold ml-4 ">
+                  utilisateurs et sessions
+                </h1>
+                <AreaChart
+                  series={seriesDataU}
+                  categories={categoriesU}
+                  width={564}
+                  height={200}
+                />
+              </div>
+              <div className="  bg-white pt-2  rounded-md border border-gray-300 w-fit pr-3 ">
+                <h1 className="text-gray-700 font-semibold ml-4">Evénements</h1>
+                <AreaChart
+                  series={seriesData}
+                  categories={categories}
+                  width={564}
+                  height={200}
+                />
+              </div>
+            </div>
+          ) : (
+            <div>Chargement</div>
+          )}
+          {data.events && data.sessions && data.users ? (
+            <div className="flex mt-5 w-full justify-center mx-auto gap-5">
               <Card
-                content={"Revenu $"}
-                count={conversion}
+                content={"Nombre d'utilisateurs"}
+                count={data.users.TotalCount}
               />
-            )}
-          </div>
-        )}
-      </div>
+              <Card
+                content={"Nombre des sessions"}
+                count={data.sessions.TotalCount}
+              />
+              <Card
+                content={"Total des évènements"}
+                count={data.events.TotalCount}
+              />
+              {conversion && (
+                <Card
+                  content={"Revenu $"}
+                  count={conversion.toFixed(2)}
+                />
+              )}
+            </div>
+          ) : (
+            <p>Wait</p>
+          )}
+        </div>
+      )}
     </>
   );
 };

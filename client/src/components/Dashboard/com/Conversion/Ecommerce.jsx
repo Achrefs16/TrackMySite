@@ -33,6 +33,7 @@ const Ecommerce = () => {
     salesc: [],
     salespdaily: [],
     salescdaily: [],
+    salespdate: [],
   });
   const selectedWebsite = useSelector(
     (state) => state.website.selectedWebsite.appId
@@ -50,6 +51,7 @@ const Ecommerce = () => {
         "/salescate",
         "/salescated",
         "/salesproductd",
+        "/pdate",
       ];
 
       try {
@@ -68,13 +70,14 @@ const Ecommerce = () => {
           dispatch(logout());
           return;
         }
-
+        console.log(data);
         // Assuming the order is important, update state with results or default values
         setData({
           salesp: results[0].success ? results[0].data : [],
           salesc: results[1].success ? results[1].data : [],
           salescdaily: results[2].success ? results[2].data : [],
           salespdaily: results[3].success ? results[3].data : [],
+          salespdate: results[4].success ? results[4].data : [],
         });
       } catch (error) {
         // This catch block will now only be reached if there's an issue with Promise.all itself
@@ -94,13 +97,22 @@ const Ecommerce = () => {
   let seriesCa = [];
   if (data.salespdaily && data.salespdaily.DailySalesByProduct) {
     // For salespdaily by Product
-    series = data.salespdaily.DailySalesByProduct.filter(
+    series = data.salespdate.SalesByProduct.filter(
       (item) => item.ProductName && item.Count !== null
-    ) // Ensure item.Count is not null
-      .map((item) => ({
-        name: item.ProductName,
-        data: [{ x: new Date(item.SaleDate).getTime(), y: item.Count }], // Use Count instead of DailyRevenue
-      }));
+    ).reduce((acc, item) => {
+      const existingItemIndex = acc.findIndex(
+        (entry) => entry.name === item.ProductName
+      );
+      if (existingItemIndex !== -1) {
+        acc[existingItemIndex].data.push({ x: item.Date, y: item.Count });
+      } else {
+        acc.push({
+          name: item.ProductName,
+          data: [{ x: item.Date, y: item.Count }],
+        });
+      }
+      return acc;
+    }, []);
 
     // Extract unique dates for salespdaily
     categories = [
@@ -113,18 +125,27 @@ const Ecommerce = () => {
 
     // For salescdaily by Category
     seriesC = data.salescdaily.DailySalesByCategory.filter(
-      (item) => item.ProductCategory && item.Count !== null
-    ) // Ensure item.Count is not null
-      .map((item) => ({
-        name: item.ProductCategory + " count",
-        data: [{ x: new Date(item.SaleDate).getTime(), y: item.Count }], // Use Count instead of DailyRevenue
-      }));
+      (item) => item.Category && item.Count !== null
+    ).reduce((acc, item) => {
+      const existingItemIndex = acc.findIndex(
+        (entry) => entry.name === item.Category
+      );
+      if (existingItemIndex !== -1) {
+        acc[existingItemIndex].data.push({ x: item.Date, y: item.Count });
+      } else {
+        acc.push({
+          name: item.Category,
+          data: [{ x: item.Date, y: item.Count }],
+        });
+      }
+      return acc;
+    }, []);
 
-    // Extract unique dates for salescdaily
+    // Extract unique dates for salespdaily
     categoriesC = [
       ...new Set(
         data.salescdaily.DailySalesByCategory.map((item) =>
-          new Date(item.SaleDate).toISOString()
+          new Date(item.Date).toISOString()
         )
       ),
     ];
@@ -150,7 +171,6 @@ const Ecommerce = () => {
     categorieCa = validCa.map((item) => item.ProductCategory);
     const seriesDataC = validCa.map((item) => item.TotalRevenue);
 
-    console.log(data);
     seriesCa = [
       {
         name: "Revenue",

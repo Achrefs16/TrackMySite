@@ -3,6 +3,7 @@ const router = express.Router();
 const { isUserAuthenticated } = require("../middlewares/isUserAuthenticated");
 const {
   createDataFetchHandler,
+  fetchTotalConversion,
 } = require("../controllers/OverviewAnalyticsController");
 // Set up routes for fetching user data
 router.get(
@@ -24,5 +25,5 @@ router.get(
   isUserAuthenticated,
   createDataFetchHandler("events")
 );
-
+router.get("/conversion/:interval", fetchTotalConversion);
 module.exports = router;

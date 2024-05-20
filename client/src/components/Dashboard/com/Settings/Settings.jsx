@@ -79,13 +79,13 @@ const Settings = () => {
       <div className="flex min-h-full  h-full  px-6 py-6 lg:px-8 bg-gray-50 text-gray-800">
         <aside class="hidden py-4 md:w-1/3 lg:w-1/4 md:block ">
           <div class="sticky flex flex-col gap-2 p-4 text-sm border-r border-indigo-100 top-12">
-            <h2 class="pl-3 mb-4 text-2xl font-semibold">Settings</h2>
+            <h2 class="pl-3 mb-4 text-2xl font-semibold">Paramètres</h2>
 
             <a
               href="#"
               class="flex items-center px-3 py-2.5 font-bold bg-gray-100  text-brand border rounded-full"
             >
-              Account Settings
+              Paramètres du compte
             </a>
 
             <a
@@ -101,20 +101,22 @@ const Settings = () => {
           {!isEditing ? (
             <div className="space-y-6 p-10 mt-20">
               <h2 className="text-xl font-semibold text-gray-900">
-                Profile Information
+                Informations sur le profil
               </h2>
               <div className="grid grid-cols-2 gap-4">
-                <div className="font-medium text-gray-600">Name:</div>
+                <div className="font-medium text-gray-600">Nom :</div>
                 <div>{name}</div>
 
-                <div className="font-medium text-gray-600">Email Address:</div>
+                <div className="font-medium text-gray-600">
+                  Adresse e-mail :
+                </div>
                 <div>{email}</div>
               </div>
               <button
                 className="mt-6 px-6 py-2 bg-brand hover:bg-brand-dark text-white font-semibold rounded-md transition duration-200 ease-in-out"
                 onClick={() => setIsEditing(true)}
               >
-                Edit Profile
+                Modifier le profil
               </button>
             </div>
           ) : (
@@ -127,7 +129,7 @@ const Settings = () => {
                   htmlFor="name"
                   className="block text-sm font-medium leading-6 text-gray-500"
                 >
-                  Full Name
+                  Nom et prénom
                 </label>
                 <div className="mt-2">
                   <input
@@ -146,7 +148,7 @@ const Settings = () => {
                   htmlFor="email"
                   className="block text-sm font-medium leading-6 text-gray-500"
                 >
-                  Email address
+                  Adresse e-mail
                 </label>
                 <div className="mt-2">
                   <input
@@ -167,7 +169,7 @@ const Settings = () => {
                   htmlFor="password"
                   className="block text-sm font-medium leading-6 text-gray-500"
                 >
-                  Password
+                  Mot de passe
                 </label>
                 <div className="mt-2">
                   <input
@@ -199,7 +201,7 @@ const Settings = () => {
                   htmlFor="confirmPassword"
                   className="block text-sm font-medium leading-6 text-gray-500"
                 >
-                  Confirm Password
+                  Confirmer le mot de passe
                 </label>
                 <div className="mt-2">
                   <input
@@ -216,7 +218,7 @@ const Settings = () => {
                 </div>
                 {!passwordsMatch && confirmPassword && (
                   <div className="text-sm text-sunny">
-                    Passwords do not match
+                    Les mots de passe ne correspondent pas
                   </div>
                 )}
               </div>
@@ -225,7 +227,7 @@ const Settings = () => {
                   type="submit"
                   className="flex w-full justify-center rounded-md bg-brand px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
                 >
-                  Update Profile
+                  Sauvegarder les changements
                 </button>
                 <button
                   onClick={() => {
@@ -233,7 +235,7 @@ const Settings = () => {
                   }}
                   className="flex w-full justify-center rounded-md bg-gray-300 mt-2 px-3 py-1.5 text-sm font-semibold leading-6  shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
                 >
-                  Back{" "}
+                  Retour{" "}
                 </button>
               </div>
             </form>

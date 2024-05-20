@@ -66,18 +66,15 @@ exports.insertUserData = async (data) => {
     throw new Error("Error processing your request.");
   }
 };
-
 async function getCountryCityFromCoordinates(latitude, longitude) {
-  const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+  const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`;
 
   try {
-    const response = await fetch(url, {
-      headers: { "User-Agent": "pfe" },
-    });
+    const response = await fetch(url);
     const data = await response.json();
 
-    const country = data.address.country;
-    const city = data.address.city || data.address.town || data.address.village;
+    const country = data.countryName;
+    const city = data.locality || data.city;
 
     return { country, city };
   } catch (error) {
@@ -85,6 +82,7 @@ async function getCountryCityFromCoordinates(latitude, longitude) {
     return null;
   }
 }
+
 exports.insertSessionData = async (data) => {
   try {
     // First, check if the session already exists

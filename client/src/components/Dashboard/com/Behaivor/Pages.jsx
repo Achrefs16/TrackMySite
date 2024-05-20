@@ -84,10 +84,10 @@ const Pages = () => {
                 Nom de la page
               </th>
               <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider">
-                Temps moyen passé
+                Temps moyen
               </th>
               <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider">
-                Profondeur moyenne de défilement
+                Défilement moyen
               </th>
             </tr>
           </thead>
@@ -122,7 +122,7 @@ const Pages = () => {
           series={series}
           categories={categories}
           width="100%"
-          height={326}
+          height={368}
           title={"Vue de la page"}
         />
       </div>

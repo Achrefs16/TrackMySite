@@ -8,7 +8,7 @@ async function combineProductViews(appId) {
     WHERE appId = ? AND event = 'Product-View'
     GROUP BY productName
     ORDER BY TotalViews DESC
-      LIMIT 10;
+      LIMIT 5;
   `;
 
   // SQL for Daily Product Views in the Last Month
@@ -36,7 +36,7 @@ async function combineAddToCartViews(appId) {
     WHERE appId = ? AND event = 'Add-to-Cart'
     GROUP BY productName
     ORDER BY TotalAdds DESC
-      LIMIT 10;
+      LIMIT 5;
   `;
 
   try {
@@ -58,7 +58,7 @@ async function combineAddToCartCategoryViews(appId) {
     WHERE appId = ? AND event = 'Add-to-Cart'
     GROUP BY productCategory
     ORDER BY TotalAdds DESC
-      LIMIT 10;
+      LIMIT 5;
   `;
 
   try {
@@ -82,7 +82,7 @@ async function combineProductViewsByCategory(appId) {
     WHERE appId = ? AND event = 'Product-View'
     GROUP BY productCategory
     ORDER BY TotalViews DESC
-       LIMIT 10;
+       LIMIT 5;
   `;
 
   try {
@@ -110,7 +110,40 @@ async function fetchSalesByProduct(appId) {
       WHERE appId = ? AND event = 'Purchase'
       GROUP BY ProductName
       ORDER BY TotalRevenue DESC
-         LIMIT 10;
+         LIMIT 5;
+    `;
+    const [results] = await pool.query(sql, [appId]);
+    return results;
+  } catch (error) {
+    console.error("Error fetching sales by product:", error);
+    throw error; // Rethrowing the error is optional and depends on how you want to handle it upstream.
+  }
+}
+async function fetchdateProduct(appId) {
+  try {
+    const sql = `
+SELECT 
+    Date,
+    ProductName,
+    Count
+FROM (
+    SELECT 
+        Date,
+        ProductName,
+        Count,
+        ROW_NUMBER() OVER (PARTITION BY Date ORDER BY Count DESC) AS row_num
+    FROM (
+        SELECT 
+            DATE_FORMAT(FROM_UNIXTIME(timestamp / 1000), '%Y-%m-%d') AS Date,
+            JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.productName')) AS ProductName,
+            COUNT(*) AS Count
+        FROM events
+        WHERE appId = ? AND event = 'Purchase'
+        GROUP BY Date, ProductName
+    ) AS subquery1
+) AS subquery2
+WHERE row_num <= 2;
+
     `;
     const [results] = await pool.query(sql, [appId]);
     return results;
@@ -141,6 +174,7 @@ async function fetchSalesByCategory(appId) {
 }
 async function fetchDailySalesByProduct(appId) {
   try {
+    console.log(appId);
     const sql = `
       SELECT 
         JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.productName')) AS ProductName,
@@ -163,24 +197,38 @@ async function fetchDailySalesByProduct(appId) {
 async function fetchDailySalesByCategory(appId) {
   try {
     const sql = `
-      SELECT 
-        DATE(FROM_UNIXTIME(timestamp / 1000)) AS SaleDate,
-        JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.productCategory')) AS ProductCategory,
-        COUNT(*) AS Count,
-        SUM(JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.productPrice'))) AS DailyRevenue
-      FROM events
-      WHERE appId = ? AND event = 'Purchase'
-      GROUP BY SaleDate, ProductCategory
-      ORDER BY SaleDate DESC, DailyRevenue DESC
-         LIMIT 10;
-    `;
+SELECT 
+    Date,
+    Category,
+    Count
+FROM (
+    SELECT 
+        Date,
+        Category,
+        Count,
+        ROW_NUMBER() OVER (PARTITION BY Date ORDER BY Count DESC) AS row_num
+    FROM (
+        SELECT 
+            DATE_FORMAT(FROM_UNIXTIME(timestamp / 1000), '%Y-%m-%d') AS Date,
+            JSON_UNQUOTE(JSON_EXTRACT(eventData, '$.productCategory')) AS Category,
+            COUNT(*) AS Count
+        FROM events
+        WHERE appId = ? AND event = 'Purchase'
+        GROUP BY Date, Category
+    ) AS subquery1
+) AS subquery2
+WHERE row_num <= 5;
+`;
+
     const [results] = await pool.query(sql, [appId]);
+    console.log(results);
     return results;
   } catch (error) {
     console.error("Error fetching daily sales by category:", error);
     throw error;
   }
 }
+
 module.exports = {
   fetchDailySalesByCategory,
   fetchDailySalesByProduct,
@@ -190,4 +238,5 @@ module.exports = {
   combineAddToCartViews,
   combineProductViews,
   combineProductViewsByCategory,
+  fetchdateProduct,
 };

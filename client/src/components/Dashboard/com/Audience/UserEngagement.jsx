@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+
 import { useDispatch } from "react-redux";
 import { logout } from "../../../../store/userSlice";
 import BarChart from "../charts/BarChart";
@@ -12,14 +12,13 @@ import AreaChart from "../charts/AreaChart";
 const UserEngagement = () => {
   const token = useSelector((state) => state.user.token);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const [data, setData] = useState(null);
   const [returning, setReturning] = useState(null);
   const [newUser, setNewUser] = useState(null);
   const [TotalUser, setTotalUser] = useState(null);
   const [userLoyaltyData, setUserLoyaltyData] = useState([]);
-  const [selectedPeriod, setSelectedPeriod] = useState("year");
+  const [selectedPeriod, setSelectedPeriod] = useState("month");
   const handleChange = async (event) => {
     setSelectedPeriod(event.target.value);
   };
@@ -90,7 +89,7 @@ const UserEngagement = () => {
       }
     };
     getData();
-  }, [selectedPeriod, token]);
+  }, [selectedPeriod, token, selectedWebsite]);
 
   const formattedDataUser =
     (data &&

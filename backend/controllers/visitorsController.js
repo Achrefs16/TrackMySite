@@ -23,9 +23,7 @@ async function fetchUserAnalyticsByInterval(appId, interval) {
   switch (interval) {
     case "day":
       condition = `DATE(FROM_UNIXTIME(timestamp / 1000)) = CURRENT_DATE`;
-      breakdownGroupBy = `DATE_FORMAT(FROM_UNIXTIME(timestamp / 1000), '%Y-%m-%d %H:00:00')
-
-`;
+      breakdownGroupBy = `DATE_FORMAT(FROM_UNIXTIME(timestamp / 1000), '%Y-%m-%d %H:00:00')`;
       break;
     case "week":
       condition = `FROM_UNIXTIME(timestamp / 1000) >= DATE_SUB(CURRENT_DATE, INTERVAL 1 week)`;
@@ -145,9 +143,9 @@ async function fetchUserLoyalty(appId) {
   const userLoyaltySql = `
     SELECT
       CASE
-        WHEN sessionCount >= 5 THEN 'Highly Engaged'
-        WHEN sessionCount >= 3 THEN 'Moderately Engaged'
-        ELSE 'Low Engagement'
+        WHEN sessionCount >= 5 THEN 'fortement engagés'
+        WHEN sessionCount >= 3 THEN 'modérément engagés'
+        ELSE 'peu engagés'
       END AS EngagementLevel,
       COUNT(*) AS UserCount
     FROM (

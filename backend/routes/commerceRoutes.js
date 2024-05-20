@@ -42,4 +42,6 @@ router.get(
   isUserAuthenticated,
   commerceController.getDailySalesByCategory
 );
+
+router.get("/pdate", isUserAuthenticated, commerceController.getdateByProduct);
 module.exports = router;

@@ -34,7 +34,7 @@ const SignIn = () => {
         if (data.token) {
           // Decode token to get user details
           dispatch(setCredentials({ token: data.token }));
-          navigate("/dashboard");
+          navigate("/dashboard/overview");
         }
       }
     } catch (error) {
@@ -144,16 +144,6 @@ const SignIn = () => {
                     alt=""
                   />
                   <span> Google</span>
-                </div>
-              </button>
-              <button className=" bg-white rounded-md px-8 py-2 border border-inherit text-slate-900 hover:bg-gray-100">
-                <div className="flex gap-3">
-                  <img
-                    className="w-6"
-                    src={img1}
-                    alt=""
-                  />
-                  <span> Github</span>
                 </div>
               </button>
             </div>

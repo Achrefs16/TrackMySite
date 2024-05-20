@@ -11,10 +11,10 @@ const { isAuthenticated } = require("../middlewares/isAuthenticated");
 // Middleware to log the IP and perform GeoIP lookup
 
 router.use((req, res, next) => {
-  const ip = req.ip || req.connection.remoteAddress;
+  const ipAddress = req.socket.remoteAddress;
 
-  geo = geoip.lookup(ip); // Attach geo info to request object
-
+  geo = geoip.lookup(ipAddress); // Attach geo info to request object
+  console.log("test geo", geo);
   next();
 });
 
