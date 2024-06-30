@@ -199,7 +199,7 @@ const AddwsModal = ({ isOpen, onClose, getWebsites, close }) => {
                     setCategory("");
                     onClose();
                   }}
-                  className="mt-4 text-white bg-brand px-5 py-2 rounded-md text-lg font-semibold shadow-xl focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand"
+                  className="mt-4 text-white mr-4 bg-brand px-5 py-2 rounded-md text-lg font-semibold shadow-xl focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand"
                 >
                   Acceder Au Guide D'installation
                 </button>

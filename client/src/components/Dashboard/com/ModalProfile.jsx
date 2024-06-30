@@ -6,6 +6,12 @@ import { logout } from "../../../store/userSlice";
 import { motion } from "framer-motion";
 import { TbLogout } from "react-icons/tb";
 import { FaRegEdit } from "react-icons/fa";
+import {
+  setSelectedWebsite,
+  clearSelectedWebsite,
+  clearWebsitedata,
+  setWebsitedata,
+} from "../../../store/websiteSlice";
 const ModalProfile = ({ isOpen, onClose }) => {
   const userDetails = useSelector((state) => state.user.details);
   const dispatch = useDispatch();
@@ -13,6 +19,8 @@ const ModalProfile = ({ isOpen, onClose }) => {
   const handlelogout = () => {
     navigate("/");
     dispatch(logout());
+    dispatch(clearSelectedWebsite());
+    dispatch(clearWebsitedata());
   };
   if (!isOpen) return null;
   return (
